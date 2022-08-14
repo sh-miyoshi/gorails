@@ -1,0 +1,97 @@
+package system
+
+import (
+	"fmt"
+	"os"
+
+	"{{.GoModPath}}/db"
+	"gopkg.in/yaml.v2"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+)
+
+type TransactionManager struct {
+	db *gorm.DB
+	tx *gorm.DB
+}
+
+type dbCommonConfig struct {
+	Adapter string `yaml:"adapter"`
+	URL     string `yaml:"url"`
+}
+
+type dbConfig struct {
+	Development dbCommonConfig `yaml:"development"`
+	Production  dbCommonConfig `yaml:"production"`
+}
+
+var (
+	txMgrInst TransactionManager
+)
+
+func InitTxManager(confFile string, env string) error {
+	fp, err := os.Open(confFile)
+	if err != nil {
+		return fmt.Errorf("failed to open database config file: %v", err)
+	}
+	defer fp.Close()
+
+	var conf dbConfig
+	if err := yaml.NewDecoder(fp).Decode(&conf); err != nil {
+		return fmt.Errorf("failed to decode database yaml: %v", err)
+	}
+
+	switch env {
+	case "development":
+		txMgrInst.db, err = gorm.Open(getDialector(conf.Development.Adapter, conf.Development.URL), &gorm.Config{})
+	case "production":
+		txMgrInst.db, err = gorm.Open(getDialector(conf.Production.Adapter, conf.Production.URL), &gorm.Config{})
+	default:
+		return fmt.Errorf("invalid env type %s is specified", env)
+	}
+	if err != nil {
+		return fmt.Errorf("failed to connect to db: %w", err)
+	}
+
+	return nil
+}
+
+func AutoMigrate() error {
+	if txMgrInst.db == nil {
+		return fmt.Errorf("please run InitTxManager before auto migration")
+	}
+
+	targets := db.MigrateTargets()
+	return txMgrInst.db.AutoMigrate(targets...)
+}
+
+func Transaction(txFunc func() error) error {
+	txMgrInst.tx = txMgrInst.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			txMgrInst.tx.Rollback()
+		}
+		txMgrInst.tx = nil
+	}()
+
+	if err := txFunc(); err != nil {
+		txMgrInst.tx.Rollback()
+		return err
+	}
+	return txMgrInst.tx.Commit().Error
+}
+
+func DB() *gorm.DB {
+	if txMgrInst.tx != nil {
+		return txMgrInst.tx
+	}
+	return txMgrInst.db
+}
+
+func getDialector(adaptor string, url string) gorm.Dialector {
+	switch adaptor {
+	case "postgres", "postgresql":
+		return postgres.Open(url)
+	}
+	return nil
+}

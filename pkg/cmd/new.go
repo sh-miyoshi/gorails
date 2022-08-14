@@ -1,0 +1,113 @@
+package cmd
+
+import (
+	"fmt"
+	"os"
+	"strings"
+
+	"text/template"
+
+	"github.com/sh-miyoshi/gorails/pkg/cmd/util"
+	"github.com/sh-miyoshi/gorails/pkg/config"
+	"github.com/spf13/cobra"
+)
+
+type templateValue struct {
+	GoModPath string
+	DBName    string
+}
+
+func init() {
+	rootCmd.AddCommand(newCmd)
+}
+
+var newCmd = &cobra.Command{
+	Use:   "new",
+	Short: "New gorails project",
+	Long:  `New gorails project`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) != 1 {
+			fmt.Println("new command requires project name")
+			fmt.Println("e.g. gorails new sample-project")
+			os.Exit(1)
+		}
+
+		// TODO skip options(--skip-client)
+
+		projectName := args[0]
+		fmt.Printf("Project name: %s\n", projectName)
+
+		if err := os.Mkdir(projectName, 0755); err != nil {
+			fmt.Println("Failed to create project directory")
+			fmt.Printf("Directory %s will not empty\n", projectName)
+			os.Exit(1)
+		}
+
+		os.Mkdir(fmt.Sprintf("%s/app", projectName), 0755)
+		os.Mkdir(fmt.Sprintf("%s/app/controllers", projectName), 0755)
+		os.Mkdir(fmt.Sprintf("%s/app/models", projectName), 0755)
+		os.Mkdir(fmt.Sprintf("%s/app/views", projectName), 0755)
+		os.Mkdir(fmt.Sprintf("%s/config", projectName), 0755)
+		os.Mkdir(fmt.Sprintf("%s/db", projectName), 0755)
+		os.Mkdir(fmt.Sprintf("%s/log", projectName), 0755)
+		os.Mkdir(fmt.Sprintf("%s/system", projectName), 0755)
+
+		fmt.Println("Successfully created base directories")
+
+		goModPath := strings.TrimSuffix(config.Get().GoModulePath, "/")
+		goModPath += "/" + projectName
+
+		// Copy system files
+		vals := templateValue{
+			GoModPath: goModPath,
+			DBName:    "app",
+		}
+		copyTemplateFile("templates/config/database.yaml.tmpl", fmt.Sprintf("%s/config/database.yaml", projectName), vals)
+		copyTemplateFile("templates/config/routes.go.tmpl", fmt.Sprintf("%s/config/routes.go", projectName), vals)
+		copyTemplateFile("templates/db/migration.go.tmpl", fmt.Sprintf("%s/db/migration.go", projectName), vals)
+		copyTemplateFile("templates/system/model.go.tmpl", fmt.Sprintf("%s/system/model.go", projectName), vals)
+		copyTemplateFile("templates/docker-compose.yml.tmpl", fmt.Sprintf("%s/docker-compose.yml", projectName), vals)
+		copyTemplateFile("templates/.gitignore", fmt.Sprintf("%s/.gitignore", projectName), vals)
+		copyTemplateFile("templates/main.go.tmpl", fmt.Sprintf("%s/main.go", projectName), vals)
+
+		fmt.Println("Successfully copied system files")
+
+		if err := os.Chdir(projectName); err != nil {
+			fmt.Printf("Failed to change directory to %s: %+v", projectName, err)
+			os.Exit(1)
+		}
+
+		// Run go initialization
+		util.RunCommand("go", "mod", "init", goModPath)
+		util.RunCommand("go", "get")
+		util.RunCommand("go", "build", "-o", "a.exe") // TODO: linuxの場合はa.outにする
+
+		fmt.Println("Successfully built server binary")
+
+		// Create frontend
+		util.RunCommand("npm", "install", "create-react-app")
+		util.RunCommand("npx", "create-react-app", "client", "--template", "empty-typescript")
+		os.Chdir("client")
+		util.RunCommand("npm", "install", "--save", "react-router-dom")
+
+		// TODO creanup
+
+		fmt.Println("Successfully installed client")
+	},
+}
+
+func copyTemplateFile(src, dst string, data any) {
+	tpl, err := template.ParseFiles(src)
+	if err != nil {
+		fmt.Printf("Failed to parse template %s: %+v", src, err)
+		os.Exit(1)
+	}
+	fp, err := os.Create(dst)
+	if err != nil {
+		fmt.Printf("Failed to create new file %s: %+v", dst, err)
+		os.Exit(1)
+	}
+	defer fp.Close()
+
+	tpl.Execute(fp, data)
+}
