@@ -19,6 +19,7 @@ type templateValue struct {
 
 func init() {
 	rootCmd.AddCommand(newCmd)
+	newCmd.Flags().Bool("skip-client", false, "Skip installing client")
 }
 
 var newCmd = &cobra.Command{
@@ -31,8 +32,6 @@ var newCmd = &cobra.Command{
 			fmt.Println("e.g. gorails new sample-project")
 			os.Exit(1)
 		}
-
-		// TODO skip options(--skip-client)
 
 		projectName := args[0]
 		fmt.Printf("Project name: %s\n", projectName)
@@ -80,19 +79,22 @@ var newCmd = &cobra.Command{
 		// Run go initialization
 		util.RunCommand("go", "mod", "init", goModPath)
 		util.RunCommand("go", "get")
-		util.RunCommand("go", "build", "-o", "a.exe") // TODO: linuxの場合はa.outにする
-
-		fmt.Println("Successfully built server binary")
+		fmt.Println("Successfully got server required modules")
 
 		// Create frontend
-		util.RunCommand("npm", "install", "create-react-app")
-		util.RunCommand("npx", "create-react-app", "client", "--template", "empty-typescript")
-		os.Chdir("client")
-		util.RunCommand("npm", "install", "--save", "react-router-dom")
+		skipClientInstall, _ := cmd.Flags().GetBool("skip-client")
+		if !skipClientInstall {
+			util.RunCommand("npm", "install", "create-react-app")
+			util.RunCommand("npx", "create-react-app", "client", "--template", "empty-typescript")
+			os.Chdir("client")
+			util.RunCommand("npm", "install", "--save", "react-router-dom")
 
-		// TODO creanup
+			// TODO creanup
 
-		fmt.Println("Successfully installed client")
+			fmt.Println("Successfully installed client")
+		}
+
+		fmt.Println("Successfully finished gorails new")
 	},
 }
 
