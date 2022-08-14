@@ -1,7 +1,10 @@
 package cmd
 
 import (
-	"github.com/sh-miyoshi/gorails/pkg/cmd/util"
+	"fmt"
+	"os"
+
+	"github.com/cosmtrek/air/runner"
 	"github.com/spf13/cobra"
 )
 
@@ -14,10 +17,20 @@ var serverCmd = &cobra.Command{
 	Short: "Run development server",
 	Long:  `Run development server`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO linuxの場合
-		util.RunCommand("go", "build", "-o", "a.exe")
-		util.RunCommand("./a.exe")
+		cfg, err := runner.InitConfig("config/hot_reloader.toml")
+		if err != nil {
+			fmt.Printf("Failed to initialize hot reloader: %+v", err)
+			os.Exit(1)
+		}
+		r, err := runner.NewEngineWithConfig(cfg, true)
+		if err != nil {
+			fmt.Printf("Failed to create hot reloader engine: %+v", err)
+			os.Exit(1)
+		}
+		defer func() {
+			r.Stop()
+		}()
 
-		// TODO hot reloading
+		r.Run()
 	},
 }

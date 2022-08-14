@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"strings"
 
 	"text/template"
@@ -15,6 +16,7 @@ import (
 type templateValue struct {
 	GoModPath string
 	DBName    string
+	ServerExt string
 }
 
 func init() {
@@ -56,12 +58,19 @@ var newCmd = &cobra.Command{
 		goModPath := strings.TrimSuffix(config.Get().GoModulePath, "/")
 		goModPath += "/" + projectName
 
+		ext := "out"
+		if runtime.GOOS == "windows" {
+			ext = "exe"
+		}
+
 		// Copy system files
 		vals := templateValue{
 			GoModPath: goModPath,
 			DBName:    "app",
+			ServerExt: ext,
 		}
 		copyTemplateFile("templates/config/database.yaml.tmpl", fmt.Sprintf("%s/config/database.yaml", projectName), vals)
+		copyTemplateFile("templates/config/hot_reloader.toml.tmpl", fmt.Sprintf("%s/config/hot_reloader.toml", projectName), vals)
 		copyTemplateFile("templates/config/routes.go.tmpl", fmt.Sprintf("%s/config/routes.go", projectName), vals)
 		copyTemplateFile("templates/db/migration.go.tmpl", fmt.Sprintf("%s/db/migration.go", projectName), vals)
 		copyTemplateFile("templates/system/model.go.tmpl", fmt.Sprintf("%s/system/model.go", projectName), vals)
