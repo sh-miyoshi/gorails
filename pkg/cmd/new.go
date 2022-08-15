@@ -9,7 +9,6 @@ import (
 	"text/template"
 
 	"github.com/sh-miyoshi/gorails/pkg/cmd/util"
-	"github.com/sh-miyoshi/gorails/pkg/config"
 	"github.com/spf13/cobra"
 )
 
@@ -22,6 +21,8 @@ type templateValue struct {
 func init() {
 	rootCmd.AddCommand(newCmd)
 	newCmd.Flags().Bool("skip-client", false, "Skip installing client")
+	newCmd.Flags().String("go-mod-path", "", "[Required] go module path. e.g. github.com/sh-miyoshi")
+	newCmd.MarkFlagRequired("go-mod-path")
 }
 
 var newCmd = &cobra.Command{
@@ -55,7 +56,8 @@ var newCmd = &cobra.Command{
 
 		fmt.Println("Successfully created base directories")
 
-		goModPath := strings.TrimSuffix(config.Get().GoModulePath, "/")
+		goModPath, _ := cmd.Flags().GetString("go-mod-path")
+		goModPath = strings.TrimSuffix(goModPath, "/")
 		goModPath += "/" + projectName
 
 		ext := "out"

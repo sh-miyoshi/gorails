@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/sh-miyoshi/gorails/pkg/config"
 	"github.com/spf13/cobra"
 )
 
@@ -21,11 +20,6 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	cobra.OnInitialize(func() {
-		if err := config.Init(configFile); err != nil {
-			fmt.Printf("Failed to init config: %+v", err)
-			os.Exit(1)
-		}
-
 		// TODO check required program check(go, npm)
 	})
 
