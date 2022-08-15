@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: sampleapp
+      POSTGRES_DB: {{.DBName}}
     ports:
       - 5432:5432
   adminer:
