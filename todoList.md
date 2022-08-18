@@ -9,18 +9,20 @@ create-react-appコマンド完了時にcleanup
 ### generate
 
 - controller
+  - add route
 - model
+  - migration fileに追加
 - view?
 - migration?
 - scaffold?
 - job?
 
 ServerのJSONとclientの扱いをどうするか
+alias側にもフラグを付ける
 
 ### server
 
 dev用環境変数のファイルの読み込み
-hot reloading
 
 ### client
 

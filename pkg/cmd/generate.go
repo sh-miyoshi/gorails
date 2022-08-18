@@ -18,7 +18,8 @@ type Column struct {
 func init() {
 	rootCmd.AddCommand(generateCmd)
 	rootCmd.AddCommand(genShotCmd)
-	generateCmd.Flags().StringArray("columns", []string{}, "")
+	generateCmd.Flags().StringArray("columns", []string{}, "column list of model. please set by <Key>:<type> format")
+	generateCmd.Flags().StringArray("methods", []string{}, "method name list of controller")
 }
 
 var genShotCmd = &cobra.Command{
@@ -47,7 +48,45 @@ var generateCmd = &cobra.Command{
 
 		switch resType {
 		case "controller", "c":
-			fmt.Println("WIP")
+			// Create file
+			fname := fmt.Sprintf("app/controllers/%s_controller.go", strings.ToLower(resName))
+			if util.FileExists(fname) {
+				fmt.Printf("controller %s will already generated\n", resName)
+				os.Exit(1)
+			}
+
+			fp, err := os.Create(fname)
+			if err != nil {
+				fmt.Printf("Failed to create controller file: %+v\n", err)
+				os.Exit(1)
+			}
+			defer fp.Close()
+
+			// Write controller struct
+			tpl, err := template.New("").Parse(controllerTemplate)
+			if err != nil {
+				fmt.Printf("System error. Failed to parse controller template: %+v", err)
+				os.Exit(1)
+			}
+			methods, _ := cmd.Flags().GetStringArray("methods")
+			controllerName := strings.ToUpper(resName[:1]) + strings.ToLower(resName[1:])
+			for i := 0; i < len(methods); i++ {
+				methods[i] = controllerName + strings.ToUpper(methods[i][:1]) + strings.ToLower(methods[i][1:])
+			}
+
+			data := struct {
+				Methods   []string
+				MethodLen int
+			}{
+				Methods:   methods,
+				MethodLen: len(methods),
+			}
+			tpl.Execute(fp, data)
+			util.RunCommand("go", "fmt", fname)
+
+			// TODO add route
+
+			fmt.Println("Successfully generate controller")
 		case "model", "m":
 			// Create file
 			fname := fmt.Sprintf("app/models/%s.go", strings.ToLower(resName))
@@ -122,4 +161,18 @@ type {{ .ModelName }} struct {
 {{ end }}
 }
 
+`
+
+var controllerTemplate = `package controllers
+
+{{ if gt .MethodLen 0 }}
+import (
+	"net/http"
+)
+{{ end }}
+
+{{ range .Methods }}
+func {{.}}(w http.ResponseWriter, r *http.Request) {
+}
+{{ end }}
 `
