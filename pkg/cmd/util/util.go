@@ -17,3 +17,8 @@ func RunCommand(name string, args ...string) {
 		fmt.Println(string(out))
 	}
 }
+
+func FileExists(filename string) bool {
+	_, err := os.Stat(filename)
+	return err == nil
+}
