@@ -7,8 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var configFile string
-
 var rootCmd = &cobra.Command{
 	Use:   "gorails",
 	Short: "gorails is a building tool for web apps",
@@ -22,8 +20,6 @@ func init() {
 	cobra.OnInitialize(func() {
 		// TODO check required program check(go, npm)
 	})
-
-	rootCmd.PersistentFlags().StringVar(&configFile, "config", "config.yaml", "The file path of gorails config")
 }
 
 // Execute method run root command

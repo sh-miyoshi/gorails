@@ -17,7 +17,16 @@ type Column struct {
 
 func init() {
 	rootCmd.AddCommand(generateCmd)
+	rootCmd.AddCommand(genShotCmd)
 	generateCmd.Flags().StringArray("columns", []string{}, "")
+}
+
+var genShotCmd = &cobra.Command{
+	Use:   "g",
+	Short: "an alias of generate command",
+	Run: func(cmd *cobra.Command, args []string) {
+		generateCmd.Run(cmd, args)
+	},
 }
 
 var generateCmd = &cobra.Command{
@@ -71,6 +80,7 @@ var generateCmd = &cobra.Command{
 			util.RunCommand("go", "fmt", fname)
 
 			fmt.Println("Successfully generate model")
+			fmt.Println("Please set to migration targets in db/migration.go")
 		case "view", "v":
 			fmt.Println("WIP")
 		default:
