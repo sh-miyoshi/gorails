@@ -42,6 +42,11 @@ var generateCmd = &cobra.Command{
 		case "model", "m":
 			// Create file
 			fname := fmt.Sprintf("app/models/%s.go", strings.ToLower(resName))
+			if util.FileExists(fname) {
+				fmt.Printf("model %s will already generated\n", resName)
+				os.Exit(1)
+			}
+
 			fp, err := os.Create(fname)
 			if err != nil {
 				fmt.Printf("Failed to create model file: %+v\n", err)
