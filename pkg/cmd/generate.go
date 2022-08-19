@@ -17,12 +17,14 @@ type Column struct {
 
 func init() {
 	rootCmd.AddCommand(generateCmd)
-	rootCmd.AddCommand(genShotCmd)
+	rootCmd.AddCommand(genShortCmd)
 	generateCmd.Flags().StringArray("columns", []string{}, "column list of model. please set by <Key>:<type> format")
 	generateCmd.Flags().StringArray("methods", []string{}, "method name list of controller")
+	genShortCmd.Flags().StringArray("columns", []string{}, "column list of model. please set by <Key>:<type> format")
+	genShortCmd.Flags().StringArray("methods", []string{}, "method name list of controller")
 }
 
-var genShotCmd = &cobra.Command{
+var genShortCmd = &cobra.Command{
 	Use:   "g",
 	Short: "an alias of generate command",
 	Run: func(cmd *cobra.Command, args []string) {
