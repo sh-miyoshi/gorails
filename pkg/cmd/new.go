@@ -48,7 +48,6 @@ var newCmd = &cobra.Command{
 		os.Mkdir(fmt.Sprintf("%s/app", projectName), 0755)
 		os.Mkdir(fmt.Sprintf("%s/app/controllers", projectName), 0755)
 		os.Mkdir(fmt.Sprintf("%s/app/models", projectName), 0755)
-		os.Mkdir(fmt.Sprintf("%s/app/views", projectName), 0755)
 		os.Mkdir(fmt.Sprintf("%s/config", projectName), 0755)
 		os.Mkdir(fmt.Sprintf("%s/db", projectName), 0755)
 		os.Mkdir(fmt.Sprintf("%s/log", projectName), 0755)
