@@ -6,8 +6,6 @@ import (
 	"runtime"
 	"strings"
 
-	"text/template"
-
 	"github.com/sh-miyoshi/gorails/pkg/cmd/util"
 	"github.com/spf13/cobra"
 )
@@ -70,14 +68,14 @@ var newCmd = &cobra.Command{
 			DBName:    "app",
 			ServerExt: ext,
 		}
-		copyTemplateFile("templates/config/database.yaml.tmpl", fmt.Sprintf("%s/config/database.yaml", projectName), vals)
-		copyTemplateFile("templates/config/hot_reloader.toml.tmpl", fmt.Sprintf("%s/config/hot_reloader.toml", projectName), vals)
-		copyTemplateFile("templates/config/routes.go.tmpl", fmt.Sprintf("%s/config/routes.go", projectName), vals)
-		copyTemplateFile("templates/db/migration.go.tmpl", fmt.Sprintf("%s/db/migration.go", projectName), vals)
-		copyTemplateFile("templates/system/model.go.tmpl", fmt.Sprintf("%s/system/model.go", projectName), vals)
-		copyTemplateFile("templates/docker-compose.yml.tmpl", fmt.Sprintf("%s/docker-compose.yml", projectName), vals)
-		copyTemplateFile("templates/.gitignore", fmt.Sprintf("%s/.gitignore", projectName), vals)
-		copyTemplateFile("templates/main.go.tmpl", fmt.Sprintf("%s/main.go", projectName), vals)
+		util.CopyTemplateFile("templates/config/database.yaml.tmpl", fmt.Sprintf("%s/config/database.yaml", projectName), vals)
+		util.CopyTemplateFile("templates/config/hot_reloader.toml.tmpl", fmt.Sprintf("%s/config/hot_reloader.toml", projectName), vals)
+		util.CopyTemplateFile("templates/config/routes.go.tmpl", fmt.Sprintf("%s/config/routes.go", projectName), vals)
+		util.CopyTemplateFile("templates/db/migration.go.tmpl", fmt.Sprintf("%s/db/migration.go", projectName), vals)
+		util.CopyTemplateFile("templates/system/model.go.tmpl", fmt.Sprintf("%s/system/model.go", projectName), vals)
+		util.CopyTemplateFile("templates/docker-compose.yml.tmpl", fmt.Sprintf("%s/docker-compose.yml", projectName), vals)
+		util.CopyFile("templates/.gitignore", fmt.Sprintf("%s/.gitignore", projectName))
+		util.CopyTemplateFile("templates/main.go.tmpl", fmt.Sprintf("%s/main.go", projectName), vals)
 
 		fmt.Println("Successfully copied system files")
 
@@ -109,7 +107,7 @@ var newCmd = &cobra.Command{
 			os.Mkdir("src", 0755)
 			os.Mkdir("src/helpers", 0755)
 			os.Mkdir("src/pages", 0755)
-			copyTemplateFile("templates/client/helpers/http_request.ts", "src/helpers/http_request.ts", vals)
+			util.CopyFile("templates/client/helpers/http_request.ts", "src/helpers/http_request.ts")
 			// TODO src/types.ts, src/index.tsx
 			fmt.Println("Copied client system files")
 
@@ -118,20 +116,4 @@ var newCmd = &cobra.Command{
 
 		fmt.Println("Successfully finished gorails new")
 	},
-}
-
-func copyTemplateFile(src, dst string, data any) {
-	tpl, err := template.ParseFiles(src)
-	if err != nil {
-		fmt.Printf("Failed to parse template %s: %+v", src, err)
-		os.Exit(1)
-	}
-	fp, err := os.Create(dst)
-	if err != nil {
-		fmt.Printf("Failed to create new file %s: %+v", dst, err)
-		os.Exit(1)
-	}
-	defer fp.Close()
-
-	tpl.Execute(fp, data)
 }
