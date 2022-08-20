@@ -4,18 +4,18 @@
 
 ### new
 
-create-react-appコマンド完了時にcleanup
+clientのシステムファイルを用意
 
 ### generate
 
 - model
   - migration fileに追加
 - view?
+  - 仕様決めから
 - migration?
 - scaffold?
+  - 多分不要
 - job?
-
-ServerのJSONとclientの扱いをどうするか
 
 ### server
 
@@ -24,6 +24,7 @@ dev用環境変数のファイルの読み込み
 ### run server/client
 
 server, clientコマンドのエイリアス
+→ 動作確認
 
 ### build
 
