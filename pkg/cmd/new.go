@@ -96,13 +96,14 @@ var newCmd = &cobra.Command{
 		if !skipClientInstall {
 			util.RunCommand("npm", "install", "create-react-app")
 			util.RunCommand("npx", "create-react-app", "client", "--template", "empty-typescript")
-			os.Chdir("client")
-			util.RunCommand("npm", "install", "--save", "react-router-dom")
 
 			// creanup
 			os.RemoveAll("node_modules")
 			os.Remove("package.json")
 			os.Remove("package-lock.json")
+
+			os.Chdir("client")
+			util.RunCommand("npm", "install", "--save", "react-router-dom")
 
 			fmt.Println("Successfully installed client")
 		}
