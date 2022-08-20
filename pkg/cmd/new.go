@@ -99,7 +99,10 @@ var newCmd = &cobra.Command{
 			os.Chdir("client")
 			util.RunCommand("npm", "install", "--save", "react-router-dom")
 
-			// TODO creanup
+			// creanup
+			os.RemoveAll("node_modules")
+			os.Remove("package.json")
+			os.Remove("package-lock.json")
 
 			fmt.Println("Successfully installed client")
 		}
