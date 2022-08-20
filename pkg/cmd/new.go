@@ -105,6 +105,14 @@ var newCmd = &cobra.Command{
 			os.Chdir("client")
 			util.RunCommand("npm", "install", "--save", "react-router-dom")
 
+			// Create base files
+			os.Mkdir("src", 0755)
+			os.Mkdir("src/helpers", 0755)
+			os.Mkdir("src/pages", 0755)
+			copyTemplateFile("templates/client/helpers/http_request.ts", "src/helpers/http_request.ts", vals)
+			// TODO src/types.ts, src/index.tsx
+			fmt.Println("Copied client system files")
+
 			fmt.Println("Successfully installed client")
 		}
 
