@@ -107,8 +107,8 @@ var newCmd = &cobra.Command{
 			os.Mkdir("src", 0755)
 			os.Mkdir("src/helpers", 0755)
 			os.Mkdir("src/pages", 0755)
-			util.CopyFile("templates/client/helpers/http_request.ts", "src/helpers/http_request.ts")
-			// TODO src/types.ts, src/index.tsx
+			util.CopyFile("../../templates/client/helpers/http_request.ts", "src/helpers/http_request.ts")
+			util.CopyFile("../../templates/client/index.tsx", "src/index.tsx")
 			fmt.Println("Copied client system files")
 
 			fmt.Println("Successfully installed client")
