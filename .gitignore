@@ -1,3 +1,5 @@
 dist/*
 tmp/*
+
 *.exe
+gorails
