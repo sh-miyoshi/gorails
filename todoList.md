@@ -20,10 +20,6 @@
 
 #### view
 
-- tsconfigが欲しい
-  - tsconfig.json
-- axiosが入ってない？
-
 ```bash
 vi src/pages/topics/index/index.tsx
 vi src/index.tsx

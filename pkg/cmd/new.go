@@ -102,6 +102,7 @@ var newCmd = &cobra.Command{
 
 			os.Chdir("client")
 			util.RunCommand("npm", "install", "--save", "react-router-dom")
+			util.RunCommand("npm", "install", "--save", "axios")
 
 			// Create base files
 			os.Mkdir("src", 0755)
