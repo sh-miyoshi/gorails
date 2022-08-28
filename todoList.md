@@ -1,30 +1,30 @@
 # TODO List
 
+## 全体
+
+- templatesを埋め込む
+- migration, routesの自動追加
+  - markerを用意しその下に追加(markerが削除されていればWarningだけ出して終わり)
+
 ## コマンド一覧
-
-### new
-
-clientのシステムファイルを用意
 
 ### generate
 
 - model
   - migration fileに追加
+    - NG: templateを持っておいてそこに追加 → ユーザーが独自に追加したやつが消える
+    - OK?: 特定文字を検索し、その次の行に挿入
+      - 変にファイルを修正されてたら？(知らない、エラーにはしない)
 - view?
   - 仕様決めから
-- migration?
-- scaffold?
-  - 多分不要
-- job?
 
 ### server
 
 dev用環境変数のファイルの読み込み
 
-### run server/client
+### client
 
-server, clientコマンドのエイリアス
-→ 動作確認
+ログの表示
 
 ### build
 
