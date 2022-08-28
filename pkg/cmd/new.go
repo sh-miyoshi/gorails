@@ -11,16 +11,16 @@ import (
 )
 
 type templateValue struct {
-	GoModPath string
-	DBName    string
-	ServerExt string
+	ProjectPath string
+	DBName      string
+	ServerExt   string
 }
 
 func init() {
 	rootCmd.AddCommand(newCmd)
 	newCmd.Flags().Bool("skip-client", false, "Skip installing client")
-	newCmd.Flags().String("go-mod-path", "", "[Required] go module path. e.g. github.com/sh-miyoshi")
-	newCmd.MarkFlagRequired("go-mod-path")
+	newCmd.Flags().String("project-path", "", "[Required] project path. e.g. github.com/sh-miyoshi")
+	newCmd.MarkFlagRequired("project-path")
 }
 
 var newCmd = &cobra.Command{
@@ -53,9 +53,9 @@ var newCmd = &cobra.Command{
 
 		fmt.Println("Successfully created base directories")
 
-		goModPath, _ := cmd.Flags().GetString("go-mod-path")
-		goModPath = strings.TrimSuffix(goModPath, "/")
-		goModPath += "/" + projectName
+		projectPath, _ := cmd.Flags().GetString("project-path")
+		projectPath = strings.TrimSuffix(projectPath, "/")
+		projectPath += "/" + projectName
 
 		ext := "out"
 		if runtime.GOOS == "windows" {
@@ -64,9 +64,9 @@ var newCmd = &cobra.Command{
 
 		// Copy system files
 		vals := templateValue{
-			GoModPath: goModPath,
-			DBName:    "app",
-			ServerExt: ext,
+			ProjectPath: projectPath,
+			DBName:      "app",
+			ServerExt:   ext,
 		}
 		util.CopyTemplateFile("templates/config/database.yaml.tmpl", fmt.Sprintf("%s/config/database.yaml", projectName), vals)
 		util.CopyTemplateFile("templates/config/hot_reloader.toml.tmpl", fmt.Sprintf("%s/config/hot_reloader.toml", projectName), vals)
@@ -85,7 +85,7 @@ var newCmd = &cobra.Command{
 		}
 
 		// Run go initialization
-		util.RunCommand("go", "mod", "init", goModPath)
+		util.RunCommand("go", "mod", "init", projectPath)
 		util.RunCommand("go", "get")
 		fmt.Println("Successfully got server required modules")
 
