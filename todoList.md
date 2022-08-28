@@ -24,17 +24,6 @@
   - tsconfig.json
 - axiosが入ってない？
 
-```json
-{
-  "compilerOptions": {
-    "jsx": "react-jsx"
-  },
-  "include": [
-    "src"
-  ]
-}
-```
-
 ```bash
 vi src/pages/topics/index/index.tsx
 vi src/index.tsx
