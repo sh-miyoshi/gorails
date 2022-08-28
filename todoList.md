@@ -17,6 +17,45 @@ clientのシステムファイルを用意
   - 多分不要
 - job?
 
+#### view
+
+- tsconfigが欲しい
+  - tsconfig.json
+- axiosが入ってない？
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "src"
+  ]
+}
+```
+
+```bash
+vi src/pages/topics/index/index.tsx
+vi src/index.tsx
+```
+
+```js
+// src/pages/topics/index/index.tsx
+const TopicsIndex = () => {
+  return (
+    <div>
+      Topic Index
+    </div>
+  )
+}
+
+export default TopicsIndex
+
+// src/index.tsx
+import TopicsIndex from './pages/topics/index/index'
+<Route path="/topics" element={<TopicsIndex />} />
+```
+
 ### server
 
 dev用環境変数のファイルの読み込み
