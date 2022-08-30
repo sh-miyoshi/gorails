@@ -123,6 +123,47 @@ var generateCmd = &cobra.Command{
 			fmt.Println("Successfully generate model")
 			fmt.Println("Please set to migration targets in db/migration.go")
 		case "view", "v":
+			resDir := strings.ToLower(resName)
+			method := "index" // TODO
+
+			// Create directory and file
+			if err := os.MkdirAll(fmt.Sprintf("client/src/pages/%s/%s", resDir, method), 0755); err != nil && !os.IsExist(err) {
+				fmt.Printf("Failed to create view directory: %+v\n", err)
+				os.Exit(1)
+			}
+
+			fname := fmt.Sprintf("client/src/pages/%s/%s/%s.tsx", resDir, method, method)
+			if util.FileExists(fname) {
+				fmt.Printf("view %s will already generated\n", resName)
+				os.Exit(1)
+			}
+
+			fp, err := os.Create(fname)
+			if err != nil {
+				fmt.Printf("Failed to create view file: %+v\n", err)
+				os.Exit(1)
+			}
+			defer fp.Close()
+
+			// Write view base
+			tpl, err := template.New("").Parse(viewTemplate)
+			if err != nil {
+				fmt.Printf("System error. Failed to parse view template: %+v", err)
+				os.Exit(1)
+			}
+			data := struct {
+				Type     string
+				Method   string
+				FilePath string
+			}{
+				Type:     strings.ToUpper(resName[:1]) + strings.ToLower(resName[1:]),
+				Method:   method,
+				FilePath: fname,
+			}
+			tpl.Execute(fp, data)
+
+			// TODO Add to route in index.tsx
+
 			fmt.Println("WIP")
 		default:
 			fmt.Printf("Invalid resource type %s is specified\n", resType)
@@ -177,4 +218,16 @@ import (
 func {{.}}(w http.ResponseWriter, r *http.Request) {
 }
 {{ end }}
+`
+
+var viewTemplate = `const {{.Type}}{{.Method}} = () => {
+  return (
+    <div>
+      <h1>{{.Type}} {{.Method}}</h1>
+			<p>Find me in {{.FilePath}}</p>
+    </div>
+  )
+}
+
+export default {{.Type}}{{.Method}}
 `
