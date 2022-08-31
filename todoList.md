@@ -3,44 +3,13 @@
 ## 全体
 
 - templatesを埋め込む
-- migration, routesの自動追加
-  - markerを用意しその下に追加(markerが削除されていればWarningだけ出して終わり)
 
 ## コマンド一覧
 
 ### generate
 
-- model
-  - migration fileに追加
-    - NG: templateを持っておいてそこに追加 → ユーザーが独自に追加したやつが消える
-    - OK?: 特定文字を検索し、その次の行に挿入
-      - 変にファイルを修正されてたら？(知らない、エラーにはしない)
-- view?
-  - 仕様決めから
-
-#### view
-
-```bash
-vi src/pages/topics/index/index.tsx
-vi src/index.tsx
-```
-
-```js
-// src/pages/topics/index/index.tsx
-const TopicsIndex = () => {
-  return (
-    <div>
-      Topic Index
-    </div>
-  )
-}
-
-export default TopicsIndex
-
-// src/index.tsx
-import TopicsIndex from './pages/topics/index/index'
-<Route path="/topics" element={<TopicsIndex />} />
-```
+- migration, routes, view routesの自動追加
+  - markerを用意しその下に追加(markerが削除されていればWarningだけ出して終わり)
 
 ### server
 
