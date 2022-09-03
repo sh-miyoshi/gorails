@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/sh-miyoshi/gorails/pkg/cmd/util"
+	"github.com/sh-miyoshi/gorails/pkg/templates"
 	"github.com/spf13/cobra"
 )
 
@@ -68,14 +69,14 @@ var newCmd = &cobra.Command{
 			DBName:      "app",
 			ServerExt:   ext,
 		}
-		util.CopyFile("templates/app/model/base.go", fmt.Sprintf("%s/app/models/base.go", projectName))
+		util.CopyFile("templates/app/models/base.go", fmt.Sprintf("%s/app/models/base.go", projectName))
 		util.CopyTemplateFile("templates/config/database.yaml.tmpl", fmt.Sprintf("%s/config/database.yaml", projectName), vals)
 		util.CopyTemplateFile("templates/config/hot_reloader.toml.tmpl", fmt.Sprintf("%s/config/hot_reloader.toml", projectName), vals)
 		util.CopyTemplateFile("templates/config/routes.go.tmpl", fmt.Sprintf("%s/config/routes.go", projectName), vals)
 		util.CopyTemplateFile("templates/db/migration.go.tmpl", fmt.Sprintf("%s/db/migration.go", projectName), vals)
 		util.CopyTemplateFile("templates/system/model.go.tmpl", fmt.Sprintf("%s/system/model.go", projectName), vals)
 		util.CopyTemplateFile("templates/docker-compose.yml.tmpl", fmt.Sprintf("%s/docker-compose.yml", projectName), vals)
-		util.CopyFile("templates/.gitignore", fmt.Sprintf("%s/.gitignore", projectName))
+		templates.Exec(templates.GitIgnore, fmt.Sprintf("%s/.gitignore", projectName), nil)
 		util.CopyTemplateFile("templates/main.go.tmpl", fmt.Sprintf("%s/main.go", projectName), vals)
 
 		fmt.Println("Successfully copied system files")
