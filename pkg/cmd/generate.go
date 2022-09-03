@@ -120,6 +120,8 @@ var generateCmd = &cobra.Command{
 			tpl.Execute(fp, data)
 			util.RunCommand("go", "fmt", fname)
 
+			// TODO: Update migration file
+
 			fmt.Println("Successfully generate model")
 			fmt.Println("Please set to migration targets in db/migration.go")
 		case "view", "v":
