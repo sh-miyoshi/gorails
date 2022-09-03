@@ -1,10 +1,11 @@
 package db
 
-func MigrateTargets() []interface{} {
-	res := []interface{}{}
+import (
+	"{{.ProjectPath}}/app/models"
+)
 
-	// Please set models
-	// e.g. res = append(res, &models.Foo{})
+func MigrateTargets() []models.Base {
+	res := []models.Base{}
 
 	// GORAILS MARKER Don't edit this line
 

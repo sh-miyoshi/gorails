@@ -110,20 +110,23 @@ var generateCmd = &cobra.Command{
 				fmt.Printf("System error. Failed to parse model template: %+v", err)
 				os.Exit(1)
 			}
+			modelName := strings.ToUpper(resName[:1]) + strings.ToLower(resName[1:])
 			data := struct {
 				ModelName string
 				Columns   []Column
 			}{
-				ModelName: strings.ToUpper(resName[:1]) + strings.ToLower(resName[1:]),
+				ModelName: modelName,
 				Columns:   parseColumns(cmd),
 			}
 			tpl.Execute(fp, data)
 			util.RunCommand("go", "fmt", fname)
 
-			// TODO: Update migration file
+			// Update migration file
+			fname = "db/migration.go"
+			util.AppendLine(fname, fmt.Sprintf("res = append(res, &models.%s{})", modelName))
+			util.RunCommand("go", "fmt", fname)
 
 			fmt.Println("Successfully generate model")
-			fmt.Println("Please set to migration targets in db/migration.go")
 		case "view", "v":
 			resDir := strings.ToLower(resName)
 			method := "index" // TODO

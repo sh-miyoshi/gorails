@@ -10,8 +10,6 @@
 
 - migration, routes, view routesの自動追加
   - markerを用意しその下に追加(markerが削除されていればWarningだけ出して終わり)
-  - migration
-    - generateコマンド内で処理を呼び出す
 
 ### server
 
