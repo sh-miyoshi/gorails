@@ -6,7 +6,7 @@ import (
 )
 
 func TestAppendLine(t *testing.T) {
-	// Case 1 with marker
+	// Case 1 a file with marker
 	f1, _ := os.CreateTemp("", "")
 	defer os.Remove(f1.Name())
 
@@ -19,23 +19,35 @@ CCC
 	f1.Close()
 	AppendLine(f1.Name(), "DDD")
 
-	t.Error(f1.Name())
+	expect := `AAA
+BBB
+// GORAILS MARKER Don't edit this line
+DDD
+CCC
+`
+	buf, _ := os.ReadFile(f1.Name())
+	if string(buf) != expect {
+		t.Errorf("Failed to append data, expect %s, but got %s", expect, string(buf))
+	}
 
-	// expect := `AAA
-	// BBB
-	// // GORAILS MARKER Don't edit this line
-	// DDD
-	// CCC
-	// `
-	// buf := []byte{}
-	// fp, _ := os.Open(f1.Name())
-	// fp.Read(buf)
-	// fp.Close()
+	// Case 2 a file with no marker
+	f2, _ := os.CreateTemp("", "")
+	defer os.Remove(f2.Name())
 
-	// if string(buf) != expect {
-	// 	t.Errorf("Failed to append data, expect %s, but got %s", expect, string(buf))
-	// }
+	data = `AAA
+BBB
+CCC
+`
+	f2.WriteString(data)
+	f2.Close()
+	AppendLine(f2.Name(), "DDD")
 
-	// create tmp file with data (no marker)
-	// run, read file and check data
+	expect = `AAA
+BBB
+CCC
+`
+	buf, _ = os.ReadFile(f2.Name())
+	if string(buf) != expect {
+		t.Errorf("Failed to append data, expect %s, but got %s", expect, string(buf))
+	}
 }
