@@ -1,10 +1,12 @@
 package util
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
+	"strings"
 	"text/template"
 )
 
@@ -57,4 +59,39 @@ func CopyFile(src, dst string) {
 	defer dstFp.Close()
 
 	io.Copy(dstFp, srcFp)
+}
+
+func AppendLine(fname string, data string) {
+	const marker = "GORAILS MARKER"
+
+	fp, err := os.Open(fname)
+	if err != nil {
+		fmt.Printf("Failed to open file %s: %+v", fname, err)
+		os.Exit(1)
+	}
+
+	results := []string{}
+	scanner := bufio.NewScanner(fp)
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		line := scanner.Text()
+		results = append(results, line)
+
+		if strings.Contains(line, marker) {
+			results = append(results, data)
+		}
+	}
+	fp.Close()
+
+	// Write to file
+	fp, err = os.OpenFile(fname, os.O_WRONLY|os.O_TRUNC, 0777)
+	if err != nil {
+		fmt.Printf("Failed to open file %s for writing: %+v", fname, err)
+		os.Exit(1)
+	}
+
+	for _, line := range results {
+		fp.WriteString(line + "\n")
+	}
+	fp.Close()
 }
