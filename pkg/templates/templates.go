@@ -7,6 +7,7 @@ import (
 
 const (
 	GitIgnore int = iota
+	ModelBase
 )
 
 func Exec(templateType int, dstFile string, data any) {
@@ -20,6 +21,8 @@ func Exec(templateType int, dstFile string, data any) {
 	switch templateType {
 	case GitIgnore:
 		fp.WriteString(templateGitIgnore)
+	case ModelBase:
+		fp.WriteString(templateModelBase)
 	default:
 		fmt.Printf("System error: template type %d is not implemented yet\n", templateType)
 		os.Exit(1)

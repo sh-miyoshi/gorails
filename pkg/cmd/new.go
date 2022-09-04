@@ -69,7 +69,7 @@ var newCmd = &cobra.Command{
 			DBName:      "app",
 			ServerExt:   ext,
 		}
-		util.CopyFile("templates/app/models/base.go", fmt.Sprintf("%s/app/models/base.go", projectName))
+		templates.Exec(templates.ModelBase, fmt.Sprintf("%s/app/models/base.go", projectName), nil)
 		util.CopyTemplateFile("templates/config/database.yaml.tmpl", fmt.Sprintf("%s/config/database.yaml", projectName), vals)
 		util.CopyTemplateFile("templates/config/hot_reloader.toml.tmpl", fmt.Sprintf("%s/config/hot_reloader.toml", projectName), vals)
 		util.CopyTemplateFile("templates/config/routes.go.tmpl", fmt.Sprintf("%s/config/routes.go", projectName), vals)
