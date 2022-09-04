@@ -77,7 +77,7 @@ var newCmd = &cobra.Command{
 		util.CopyTemplateFile("templates/system/model.go.tmpl", fmt.Sprintf("%s/system/model.go", projectName), vals)
 		util.CopyTemplateFile("templates/docker-compose.yml.tmpl", fmt.Sprintf("%s/docker-compose.yml", projectName), vals)
 		templates.Exec(templates.GitIgnore, fmt.Sprintf("%s/.gitignore", projectName), nil)
-		util.CopyTemplateFile("templates/main.go.tmpl", fmt.Sprintf("%s/main.go", projectName), vals)
+		templates.Exec(templates.MainGo, fmt.Sprintf("%s/main.go", projectName), vals)
 
 		fmt.Println("Successfully copied system files")
 
