@@ -69,3 +69,15 @@ func main() {
 	}
 }
 `
+
+var templateDatabaseYaml = `default: &default
+  adapter: postgresql
+
+development:
+  <<: *default
+  url: "host=localhost port=5432 dbname={{.DBName}} user=postgres password=postgres sslmode=disable"
+
+production:
+  <<: *default
+  url: ENV["DB_CONN_STR"]
+`

@@ -10,6 +10,12 @@ const (
 	GitIgnore int = iota
 	ModelBase
 	MainGo
+	DatabaseYaml
+	HotReloader
+	Routes
+	Migration
+	SystemModel
+	DockerCompose
 )
 
 func Exec(templateType int, dstFile string, data any) {
@@ -29,6 +35,13 @@ func Exec(templateType int, dstFile string, data any) {
 		tpl, err := template.New("").Parse(templateMainGo)
 		if err != nil {
 			fmt.Printf("Failed to parse template main.go: %+v", err)
+			os.Exit(1)
+		}
+		tpl.Execute(fp, data)
+	case DatabaseYaml:
+		tpl, err := template.New("").Parse(templateDatabaseYaml)
+		if err != nil {
+			fmt.Printf("Failed to parse template database.yaml: %+v", err)
 			os.Exit(1)
 		}
 		tpl.Execute(fp, data)
