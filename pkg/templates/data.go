@@ -81,3 +81,26 @@ production:
   <<: *default
   url: ENV["DB_CONN_STR"]
 `
+
+var templateSystemUtil = `package system
+
+import (
+	"fmt"
+	"os"
+	"strings"
+)
+
+func ParseEnv(envStr string) string {
+	quotes := []string{"\"", "'"}
+	for _, q := range quotes {
+		pf := fmt.Sprintf("ENV[%s", q)
+		sf := fmt.Sprintf("%s]", q)
+		if strings.HasPrefix(envStr, pf) && strings.HasSuffix(envStr, sf) {
+			key := strings.TrimPrefix(envStr, pf)
+			key = strings.TrimSuffix(key, sf)
+			return os.Getenv(key)
+		}
+	}
+	return envStr
+}
+`

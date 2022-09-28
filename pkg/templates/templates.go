@@ -15,6 +15,7 @@ const (
 	Routes
 	Migration
 	SystemModel
+	SystemUtil
 	DockerCompose
 )
 
@@ -45,6 +46,8 @@ func Exec(templateType int, dstFile string, data any) {
 			os.Exit(1)
 		}
 		tpl.Execute(fp, data)
+	case SystemUtil:
+		fp.WriteString(templateSystemUtil)
 	default:
 		fmt.Printf("System error: template type %d is not implemented yet\n", templateType)
 		os.Exit(1)
