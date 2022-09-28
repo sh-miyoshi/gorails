@@ -74,7 +74,7 @@ var newCmd = &cobra.Command{
 		util.CopyTemplateFile("templates/config/hot_reloader.toml.tmpl", fmt.Sprintf("%s/config/hot_reloader.toml", projectName), vals)
 		util.CopyTemplateFile("templates/config/routes.go.tmpl", fmt.Sprintf("%s/config/routes.go", projectName), vals)
 		util.CopyTemplateFile("templates/db/migration.go.tmpl", fmt.Sprintf("%s/db/migration.go", projectName), vals)
-		util.CopyTemplateFile("templates/docker-compose.yml.tmpl", fmt.Sprintf("%s/docker-compose.yml", projectName), vals)
+		templates.Exec(templates.DockerCompose, fmt.Sprintf("%s//docker-compose.yml", projectName), vals)
 		templates.Exec(templates.GitIgnore, fmt.Sprintf("%s/.gitignore", projectName), nil)
 		templates.Exec(templates.MainGo, fmt.Sprintf("%s/main.go", projectName), vals)
 		templates.Exec(templates.SystemModel, fmt.Sprintf("%s/system/model.go", projectName), vals)

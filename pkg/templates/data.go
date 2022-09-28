@@ -2,6 +2,24 @@ package templates
 
 import "fmt"
 
+var templateDockerComposeYaml = `version: '3'
+
+services:
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: {{.DBName}}
+    ports:
+      - 5432:5432
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 18080:8080
+`
+
 var templateGitIgnore = `*.exe
 /node_modules
 `
