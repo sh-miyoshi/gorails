@@ -62,6 +62,13 @@ func Exec(templateType int, dstFile string, data any) {
 			os.Exit(1)
 		}
 		tpl.Execute(fp, data)
+	case Migration:
+		tpl, err := template.New("").Parse(templateMigration)
+		if err != nil {
+			fmt.Printf("Failed to parse db/migration.go: %+v", err)
+			os.Exit(1)
+		}
+		tpl.Execute(fp, data)
 	default:
 		fmt.Printf("System error: template type %d is not implemented yet\n", templateType)
 		os.Exit(1)

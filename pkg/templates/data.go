@@ -235,3 +235,18 @@ func ParseEnv(envStr string) string {
 	return envStr
 }
 `
+
+var templateMigration = `package db
+
+import (
+	"{{.ProjectPath}}/app/models"
+)
+
+func MigrateTargets() []models.Base {
+	res := []models.Base{}
+
+	// GORAILS MARKER Don't edit this line
+
+	return res
+}
+`
