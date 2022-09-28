@@ -1,5 +1,7 @@
 package templates
 
+import "fmt"
+
 var templateGitIgnore = `*.exe
 /node_modules
 `
@@ -81,6 +83,117 @@ production:
   <<: *default
   url: ENV["DB_CONN_STR"]
 `
+
+var templateSystemModelHeader = fmt.Sprintf(`package system
+
+import (
+	"fmt"
+	"os"
+
+	"{{.ProjectPath}}/db"
+	"gopkg.in/yaml.v2"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+)
+
+type TransactionManager struct {
+	db *gorm.DB
+	tx *gorm.DB
+}
+
+type dbCommonConfig struct {
+	Adapter string %s
+	URL     string %s
+}
+
+type dbConfig struct {
+	Development dbCommonConfig %s
+	Production  dbCommonConfig %s
+}
+`, "`yaml:\"adapter\"`", "`yaml:\"url\"`", "`yaml:\"development\"`", "`yaml:\"production\"`")
+
+var templateSystemModelBody = `
+
+var (
+	txMgrInst TransactionManager
+)
+
+func InitTxManager(confFile string, env string) error {
+	fp, err := os.Open(confFile)
+	if err != nil {
+		return fmt.Errorf("failed to open database config file: %v", err)
+	}
+	defer fp.Close()
+
+	var conf dbConfig
+	if err := yaml.NewDecoder(fp).Decode(&conf); err != nil {
+		return fmt.Errorf("failed to decode database yaml: %v", err)
+	}
+
+	adapter := ""
+	url := ""
+
+	switch env {
+	case "development":
+		adapter = conf.Development.Adapter
+		url = conf.Development.URL
+	case "production":
+		adapter = conf.Production.Adapter
+		url = conf.Production.URL
+	default:
+		return fmt.Errorf("invalid env type %s is specified", env)
+	}
+
+	txMgrInst.db, err = gorm.Open(getDialector(adapter, ParseEnv(url)), &gorm.Config{})
+	if err != nil {
+		return fmt.Errorf("failed to connect to db: %w", err)
+	}
+
+	return nil
+}
+
+func AutoMigrate() error {
+	if txMgrInst.db == nil {
+		return fmt.Errorf("please run InitTxManager before auto migration")
+	}
+
+	targets := db.MigrateTargets()
+	return txMgrInst.db.AutoMigrate(targets...)
+}
+
+func Transaction(txFunc func() error) error {
+	txMgrInst.tx = txMgrInst.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			txMgrInst.tx.Rollback()
+		}
+		txMgrInst.tx = nil
+	}()
+
+	if err := txFunc(); err != nil {
+		txMgrInst.tx.Rollback()
+		return err
+	}
+	return txMgrInst.tx.Commit().Error
+}
+
+func DB() *gorm.DB {
+	if txMgrInst.tx != nil {
+		return txMgrInst.tx
+	}
+	return txMgrInst.db
+}
+
+func getDialector(adaptor string, url string) gorm.Dialector {
+	switch adaptor {
+	case "postgres", "postgresql":
+		return postgres.Open(url)
+	}
+	return nil
+}
+`
+
+var templateSystemModel = templateSystemModelHeader + templateSystemModelBody
 
 var templateSystemUtil = `package system
 

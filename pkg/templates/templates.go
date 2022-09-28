@@ -46,6 +46,13 @@ func Exec(templateType int, dstFile string, data any) {
 			os.Exit(1)
 		}
 		tpl.Execute(fp, data)
+	case SystemModel:
+		tpl, err := template.New("").Parse(templateSystemModel)
+		if err != nil {
+			fmt.Printf("Failed to parse template system/model.go: %+v", err)
+			os.Exit(1)
+		}
+		tpl.Execute(fp, data)
 	case SystemUtil:
 		fp.WriteString(templateSystemUtil)
 	default:
