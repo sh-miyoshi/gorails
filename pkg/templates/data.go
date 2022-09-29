@@ -250,3 +250,15 @@ func MigrateTargets() []models.Base {
 	return res
 }
 `
+
+var templateRoutes = `package config
+
+import (
+	"github.com/gorilla/mux"
+)
+
+func SetRoutes(r *mux.Router) {
+	// Please set routes
+	// e.g. r.HandleFunc("/foo", controllers.FooIndex).Methods("GET")
+}
+`
