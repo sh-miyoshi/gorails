@@ -301,3 +301,25 @@ watcher = "cyan"
 # # Delete tmp directory on exit
 # clean_on_exit = true
 `
+
+var templateDockerfileServer = `FROM golang:1.19 as builder
+
+WORKDIR /app
+COPY system system
+COPY config config
+COPY go.mod go.mod
+COPY go.sum go.sum
+COPY main.go main.go
+COPY db db
+COPY app app
+RUN go build -o server
+
+
+FROM ubuntu:22.04
+
+COPY --from=builder /app/server /bin/server
+RUN mkdir -p /etc/app
+COPY config config
+
+CMD ["server"]
+`
