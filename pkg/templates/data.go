@@ -262,3 +262,42 @@ func SetRoutes(r *mux.Router) {
 	// e.g. r.HandleFunc("/foo", controllers.FooIndex).Methods("GET")
 }
 `
+
+var templateHotReloader = `# gorails use [Air](https://github.com/cosmtrek/air) for hot reloader.
+# Please see official page for more details.
+
+root = "."
+tmp_dir = "tmp"
+
+[build]
+bin = "server.{{.ServerExt}}"
+cmd = "go build -o server.{{.ServerExt}}"
+exclude_dir = ["client", "db", "log", "system", "tmp"]
+exclude_file = []
+exclude_regex = ["_test\\.go"]
+exclude_unchanged = true
+follow_symlink = false
+include_dir = []
+include_ext = ["go"]
+# This log file places in your tmp_dir.
+delay = 2000 # ms
+kill_delay = 500 # ms
+log = "hot_reloader.log" 
+send_interrupt = false 
+stop_on_error = true 
+# args_bin = ["--log", "tmp/development.log"]
+
+[log]
+time = false
+
+[color]
+# Customize each part's color. If no color found, use the raw app log.
+build = "yellow"
+main = "magenta"
+runner = "green"
+watcher = "cyan"
+
+# [misc]
+# # Delete tmp directory on exit
+# clean_on_exit = true
+`

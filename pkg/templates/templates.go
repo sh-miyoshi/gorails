@@ -71,6 +71,13 @@ func Exec(templateType int, dstFile string, data any) {
 		tpl.Execute(fp, data)
 	case Routes:
 		fp.WriteString(templateRoutes)
+	case HotReloader:
+		tpl, err := template.New("").Parse(templateHotReloader)
+		if err != nil {
+			fmt.Printf("Failed to parse config/hot_reloader.toml: %+v", err)
+			os.Exit(1)
+		}
+		tpl.Execute(fp, data)
 	default:
 		fmt.Printf("System error: template type %d is not implemented yet\n", templateType)
 		os.Exit(1)
