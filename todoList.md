@@ -1,10 +1,5 @@
 # TODO List
 
-## 全体
-
-- templatesを埋め込む
-- database.ymlで環境変数を指定できるようにする
-
 ## コマンド一覧
 
 ### generate
