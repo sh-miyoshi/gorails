@@ -18,6 +18,9 @@ const (
 	SystemUtil
 	DockerCompose
 	DockerfileServer
+	ClientTsConfig
+	ClientIndex
+	ClientHttpRequest
 )
 
 func Exec(templateType int, dstFile string, data any) {
@@ -81,6 +84,12 @@ func Exec(templateType int, dstFile string, data any) {
 		tpl.Execute(fp, data)
 	case DockerfileServer:
 		fp.WriteString(templateDockerfileServer)
+	case ClientTsConfig:
+		fp.WriteString(templateClientTsConfig)
+	case ClientIndex:
+		fp.WriteString(templateClientIndex)
+	case ClientHttpRequest:
+		fp.WriteString(templateClientHttpRequest)
 	default:
 		fmt.Printf("System error: template type %d is not implemented yet\n", templateType)
 		os.Exit(1)

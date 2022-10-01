@@ -111,9 +111,9 @@ var newCmd = &cobra.Command{
 			os.Mkdir("src", 0755)
 			os.Mkdir("src/helpers", 0755)
 			os.Mkdir("src/pages", 0755)
-			util.CopyFile("../../templates/client/helpers/http_request.ts", "src/helpers/http_request.ts")
-			util.CopyFile("../../templates/client/index.tsx", "src/index.tsx")
-			util.CopyFile("../../templates/client/tsconfig.json", "tsconfig.json")
+			templates.Exec(templates.ClientHttpRequest, "src/helpers/http_request.ts", nil)
+			templates.Exec(templates.ClientIndex, "src/index.tsx", nil)
+			templates.Exec(templates.ClientTsConfig, "tsconfig.json", nil)
 			fmt.Println("Copied client system files")
 
 			fmt.Println("Successfully installed client")
