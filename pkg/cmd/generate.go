@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"text/template"
 
 	"github.com/sh-miyoshi/gorails/pkg/cmd/util"
+	"github.com/sh-miyoshi/gorails/pkg/templates"
 	"github.com/spf13/cobra"
 )
 
@@ -57,19 +57,7 @@ var generateCmd = &cobra.Command{
 				os.Exit(1)
 			}
 
-			fp, err := os.Create(fname)
-			if err != nil {
-				fmt.Printf("Failed to create controller file: %+v\n", err)
-				os.Exit(1)
-			}
-			defer fp.Close()
-
 			// Write controller struct
-			tpl, err := template.New("").Parse(controllerTemplate)
-			if err != nil {
-				fmt.Printf("System error. Failed to parse controller template: %+v", err)
-				os.Exit(1)
-			}
 			methods, _ := cmd.Flags().GetStringArray("methods")
 			controllerName := strings.ToUpper(resName[:1]) + strings.ToLower(resName[1:])
 			for i := 0; i < len(methods); i++ {
@@ -83,7 +71,7 @@ var generateCmd = &cobra.Command{
 				Methods:   methods,
 				MethodLen: len(methods),
 			}
-			tpl.Execute(fp, data)
+			templates.Exec(templates.Controller, fname, data)
 			util.RunCommand("go", "fmt", fname)
 
 			// TODO add route
@@ -97,19 +85,7 @@ var generateCmd = &cobra.Command{
 				os.Exit(1)
 			}
 
-			fp, err := os.Create(fname)
-			if err != nil {
-				fmt.Printf("Failed to create model file: %+v\n", err)
-				os.Exit(1)
-			}
-			defer fp.Close()
-
 			// Write model struct
-			tpl, err := template.New("").Parse(modelTemplate)
-			if err != nil {
-				fmt.Printf("System error. Failed to parse model template: %+v", err)
-				os.Exit(1)
-			}
 			modelName := strings.ToUpper(resName[:1]) + strings.ToLower(resName[1:])
 			data := struct {
 				ModelName string
@@ -118,7 +94,7 @@ var generateCmd = &cobra.Command{
 				ModelName: modelName,
 				Columns:   parseColumns(cmd),
 			}
-			tpl.Execute(fp, data)
+			templates.Exec(templates.Model, fname, data)
 			util.RunCommand("go", "fmt", fname)
 
 			// Update migration file
@@ -143,19 +119,7 @@ var generateCmd = &cobra.Command{
 				os.Exit(1)
 			}
 
-			fp, err := os.Create(fname)
-			if err != nil {
-				fmt.Printf("Failed to create view file: %+v\n", err)
-				os.Exit(1)
-			}
-			defer fp.Close()
-
 			// Write view base
-			tpl, err := template.New("").Parse(viewTemplate)
-			if err != nil {
-				fmt.Printf("System error. Failed to parse view template: %+v", err)
-				os.Exit(1)
-			}
 			data := struct {
 				Type     string
 				Method   string
@@ -165,7 +129,7 @@ var generateCmd = &cobra.Command{
 				Method:   method,
 				FilePath: fname,
 			}
-			tpl.Execute(fp, data)
+			templates.Exec(templates.View, fname, data)
 
 			// TODO Add to route in index.tsx
 
@@ -194,45 +158,3 @@ func parseColumns(cmd *cobra.Command) []Column {
 
 	return res
 }
-
-var modelTemplate = `package models
-
-import "time"
-
-type {{ .ModelName }} struct {
-	ID        string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-
-{{ range .Columns }}
-	{{ .Key }} {{ .Value }}
-{{ end }}
-}
-
-`
-
-var controllerTemplate = `package controllers
-
-{{ if gt .MethodLen 0 }}
-import (
-	"net/http"
-)
-{{ end }}
-
-{{ range .Methods }}
-func {{.}}(w http.ResponseWriter, r *http.Request) {
-}
-{{ end }}
-`
-
-var viewTemplate = `const {{.Type}}{{.Method}} = () => {
-  return (
-    <div>
-      <h1>{{.Type}} {{.Method}}</h1>
-			<p>Find me in {{.FilePath}}</p>
-    </div>
-  )
-}
-
-export default {{.Type}}{{.Method}}
-`

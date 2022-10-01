@@ -21,6 +21,9 @@ const (
 	ClientTsConfig
 	ClientIndex
 	ClientHttpRequest
+	Model
+	Controller
+	View
 )
 
 func Exec(templateType int, dstFile string, data any) {
@@ -39,21 +42,21 @@ func Exec(templateType int, dstFile string, data any) {
 	case MainGo:
 		tpl, err := template.New("").Parse(templateMainGo)
 		if err != nil {
-			fmt.Printf("Failed to parse template main.go: %+v", err)
+			fmt.Printf("Failed to parse %s: %+v", dstFile, err)
 			os.Exit(1)
 		}
 		tpl.Execute(fp, data)
 	case DatabaseYaml:
 		tpl, err := template.New("").Parse(templateDatabaseYaml)
 		if err != nil {
-			fmt.Printf("Failed to parse template database.yaml: %+v", err)
+			fmt.Printf("Failed to parse %s: %+v", dstFile, err)
 			os.Exit(1)
 		}
 		tpl.Execute(fp, data)
 	case SystemModel:
 		tpl, err := template.New("").Parse(templateSystemModel)
 		if err != nil {
-			fmt.Printf("Failed to parse template system/model.go: %+v", err)
+			fmt.Printf("Failed to parse %s: %+v", dstFile, err)
 			os.Exit(1)
 		}
 		tpl.Execute(fp, data)
@@ -62,14 +65,14 @@ func Exec(templateType int, dstFile string, data any) {
 	case DockerCompose:
 		tpl, err := template.New("").Parse(templateDockerComposeYaml)
 		if err != nil {
-			fmt.Printf("Failed to parse template docker-compose.yml: %+v", err)
+			fmt.Printf("Failed to parse %s: %+v", dstFile, err)
 			os.Exit(1)
 		}
 		tpl.Execute(fp, data)
 	case Migration:
 		tpl, err := template.New("").Parse(templateMigration)
 		if err != nil {
-			fmt.Printf("Failed to parse db/migration.go: %+v", err)
+			fmt.Printf("Failed to parse %s: %+v", dstFile, err)
 			os.Exit(1)
 		}
 		tpl.Execute(fp, data)
@@ -78,7 +81,7 @@ func Exec(templateType int, dstFile string, data any) {
 	case HotReloader:
 		tpl, err := template.New("").Parse(templateHotReloader)
 		if err != nil {
-			fmt.Printf("Failed to parse config/hot_reloader.toml: %+v", err)
+			fmt.Printf("Failed to parse %s: %+v", dstFile, err)
 			os.Exit(1)
 		}
 		tpl.Execute(fp, data)
@@ -90,6 +93,27 @@ func Exec(templateType int, dstFile string, data any) {
 		fp.WriteString(templateClientIndex)
 	case ClientHttpRequest:
 		fp.WriteString(templateClientHttpRequest)
+	case Model:
+		tpl, err := template.New("").Parse(templateModel)
+		if err != nil {
+			fmt.Printf("Failed to parse %s: %+v", dstFile, err)
+			os.Exit(1)
+		}
+		tpl.Execute(fp, data)
+	case Controller:
+		tpl, err := template.New("").Parse(templateController)
+		if err != nil {
+			fmt.Printf("Failed to parse %s: %+v", dstFile, err)
+			os.Exit(1)
+		}
+		tpl.Execute(fp, data)
+	case View:
+		tpl, err := template.New("").Parse(templateView)
+		if err != nil {
+			fmt.Printf("Failed to parse %s: %+v", dstFile, err)
+			os.Exit(1)
+		}
+		tpl.Execute(fp, data)
 	default:
 		fmt.Printf("System error: template type %d is not implemented yet\n", templateType)
 		os.Exit(1)

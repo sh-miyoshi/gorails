@@ -323,3 +323,45 @@ COPY config config
 
 CMD ["server"]
 `
+
+var templateModel = `package models
+
+import "time"
+
+type {{ .ModelName }} struct {
+	ID        string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+
+{{ range .Columns }}
+	{{ .Key }} {{ .Value }}
+{{ end }}
+}
+
+`
+
+var templateController = `package controllers
+
+{{ if gt .MethodLen 0 }}
+import (
+	"net/http"
+)
+{{ end }}
+
+{{ range .Methods }}
+func {{.}}(w http.ResponseWriter, r *http.Request) {
+}
+{{ end }}
+`
+
+var templateView = `const {{.Type}}{{.Method}} = () => {
+  return (
+    <div>
+      <h1>{{.Type}} {{.Method}}</h1>
+			<p>Find me in {{.FilePath}}</p>
+    </div>
+  )
+}
+
+export default {{.Type}}{{.Method}}
+`
