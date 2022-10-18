@@ -176,7 +176,7 @@ func AutoMigrate() error {
 	}
 
 	targets := db.MigrateTargets()
-	return txMgrInst.db.AutoMigrate(targets...)
+	return txMgrInst.db.AutoMigrate(targets)
 }
 
 func Transaction(txFunc func() error) error {
