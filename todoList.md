@@ -4,12 +4,13 @@
 
 ### generate
 
-- migration, routes, view routesの自動追加
+- view routesの自動追加
   - markerを用意しその下に追加(markerが削除されていればWarningだけ出して終わり)
 
 ### server
 
 dev用環境変数のファイルの読み込み
+DBが起動しているかチェック
 
 ### client
 
