@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -18,7 +19,26 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	cobra.OnInitialize(func() {
-		// TODO check required program check(go, npm)
+		// check required program
+		c := exec.Command("go", "version")
+		out, err := c.Output()
+		if err != nil {
+			fmt.Printf("Failed to get go version: %+v\n", err)
+			if len(out) > 0 {
+				fmt.Println(string(out))
+			}
+			os.Exit(1)
+		}
+
+		c = exec.Command("npm", "--version")
+		out, err = c.Output()
+		if err != nil {
+			fmt.Printf("Failed to get npm version: %+v\n", err)
+			if len(out) > 0 {
+				fmt.Println(string(out))
+			}
+			os.Exit(1)
+		}
 	})
 }
 
