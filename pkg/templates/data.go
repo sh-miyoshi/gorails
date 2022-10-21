@@ -176,7 +176,12 @@ func AutoMigrate() error {
 	}
 
 	targets := db.MigrateTargets()
-	return txMgrInst.db.AutoMigrate(targets)
+	for _, t := range targets {
+		if err := txMgrInst.db.AutoMigrate(t); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func Transaction(txFunc func() error) error {
