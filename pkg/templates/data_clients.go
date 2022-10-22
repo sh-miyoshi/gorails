@@ -60,3 +60,5 @@ export const httpRequest = <T = APIResponse>(method: Method, url: string, body?:
   })
 }
 `
+
+var templateApplicationTs = `# GORAILS MARKER Don't edit this line`

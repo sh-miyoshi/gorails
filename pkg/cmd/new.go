@@ -47,6 +47,7 @@ var newCmd = &cobra.Command{
 		os.Mkdir(fmt.Sprintf("%s/app", projectName), 0755)
 		os.Mkdir(fmt.Sprintf("%s/app/controllers", projectName), 0755)
 		os.Mkdir(fmt.Sprintf("%s/app/models", projectName), 0755)
+		os.Mkdir(fmt.Sprintf("%s/app/schema", projectName), 0755)
 		os.Mkdir(fmt.Sprintf("%s/config", projectName), 0755)
 		os.Mkdir(fmt.Sprintf("%s/db", projectName), 0755)
 		os.Mkdir(fmt.Sprintf("%s/log", projectName), 0755)
@@ -79,6 +80,7 @@ var newCmd = &cobra.Command{
 		templates.Exec(templates.MainGo, fmt.Sprintf("%s/main.go", projectName), vals)
 		templates.Exec(templates.SystemModel, fmt.Sprintf("%s/system/model.go", projectName), vals)
 		templates.Exec(templates.SystemUtil, fmt.Sprintf("%s/system/util.go", projectName), nil)
+		templates.Exec(templates.API, fmt.Sprintf("%s/app/schema/api_schema.go", projectName), nil)
 
 		fmt.Println("Successfully copied system files")
 
@@ -112,8 +114,10 @@ var newCmd = &cobra.Command{
 			os.Mkdir("src", 0755)
 			os.Mkdir("src/helpers", 0755)
 			os.Mkdir("src/pages", 0755)
+			os.Mkdir("src/types", 0755)
 			templates.Exec(templates.ClientHttpRequest, "src/helpers/http_request.ts", nil)
 			templates.Exec(templates.ClientIndex, "src/index.tsx", nil)
+			templates.Exec(templates.ClientApplicationTs, "src/types/application.ts", nil)
 			templates.Exec(templates.ClientTsConfig, "tsconfig.json", nil)
 			fmt.Println("Copied client system files")
 

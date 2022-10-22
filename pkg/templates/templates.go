@@ -24,6 +24,8 @@ const (
 	Model
 	Controller
 	View
+	API
+	ClientApplicationTs
 )
 
 func Exec(templateType int, dstFile string, data any) {
@@ -114,6 +116,10 @@ func Exec(templateType int, dstFile string, data any) {
 			os.Exit(1)
 		}
 		tpl.Execute(fp, data)
+	case API:
+		fp.WriteString(templateAPI)
+	case ClientApplicationTs:
+		fp.WriteString(templateApplicationTs)
 	default:
 		fmt.Printf("System error: template type %d is not implemented yet\n", templateType)
 		os.Exit(1)
