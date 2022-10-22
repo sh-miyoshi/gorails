@@ -104,6 +104,7 @@ var newCmd = &cobra.Command{
 			os.Remove("package-lock.json")
 
 			os.Chdir("client")
+			fmt.Println("Install additional libraries ...")
 			util.RunCommand("npm", "install", "--save", "react-router-dom")
 			util.RunCommand("npm", "install", "--save", "axios")
 
