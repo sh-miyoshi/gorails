@@ -26,6 +26,10 @@ var templateGitIgnore = `*.exe
 
 var templateModelBase = `package models
 
+import (
+	_ "github.com/google/uuid"
+)
+
 type Base interface {
 }
 `
@@ -329,12 +333,17 @@ COPY config config
 CMD ["server"]
 `
 
-var templateModel = `package models
+var templateModel = fmt.Sprintf(`package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
 
 type {{ .ModelName }} struct {
-	ID        string
+	ID        string %s
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
@@ -343,7 +352,20 @@ type {{ .ModelName }} struct {
 {{ end }}
 }
 
-`
+func (p *{{ .ModelName }}) BeforeCreate(tx *gorm.DB) error {
+	if p.ID == "" {
+		p.ID = uuid.New().String()
+	}
+	p.CreatedAt = time.Now()
+	p.UpdatedAt = time.Now()
+	return nil
+}
+
+func (p *{{ .ModelName }}) BeforeUpdate(tx *gorm.DB) error {
+	p.UpdatedAt = time.Now()
+	return nil
+}
+`, "`gorm:\"uniqueIndex\"`")
 
 var templateController = `package controllers
 
