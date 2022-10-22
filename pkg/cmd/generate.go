@@ -138,6 +138,7 @@ var genViewCmd = &cobra.Command{
 
 		resDir := strings.ToLower(resName)
 		method, _ := cmd.Flags().GetString("method")
+		method = strings.ToLower(method)
 
 		// Create directory and file
 		if err := os.MkdirAll(fmt.Sprintf("client/src/pages/%s/%s", resDir, method), 0755); err != nil && !os.IsExist(err) {
@@ -158,14 +159,12 @@ var genViewCmd = &cobra.Command{
 			FilePath string
 		}{
 			Type:     strings.ToUpper(resName[:1]) + strings.ToLower(resName[1:]),
-			Method:   method,
+			Method:   strings.ToUpper(method[:1]) + strings.ToLower(method[1:]),
 			FilePath: fname,
 		}
 		templates.Exec(templates.View, fname, data)
 
 		// TODO Add to route in index.tsx
-
-		fmt.Println("WIP")
 	},
 }
 
