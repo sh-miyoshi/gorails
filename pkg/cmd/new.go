@@ -80,7 +80,7 @@ var newCmd = &cobra.Command{
 		templates.Exec(templates.MainGo, fmt.Sprintf("%s/main.go", projectName), vals)
 		templates.Exec(templates.SystemModel, fmt.Sprintf("%s/system/model.go", projectName), vals)
 		templates.Exec(templates.SystemUtil, fmt.Sprintf("%s/system/util.go", projectName), nil)
-		templates.Exec(templates.API, fmt.Sprintf("%s/app/schema/api_schema.go", projectName), nil)
+		templates.Exec(templates.ServerAPISchema, fmt.Sprintf("%s/app/schema/api_schema.go", projectName), nil)
 
 		fmt.Println("Successfully copied system files")
 

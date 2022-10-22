@@ -24,7 +24,7 @@ const (
 	Model
 	Controller
 	View
-	API
+	ServerAPISchema
 	ClientApplicationTs
 )
 
@@ -116,8 +116,8 @@ func Exec(templateType int, dstFile string, data any) {
 			os.Exit(1)
 		}
 		tpl.Execute(fp, data)
-	case API:
-		fp.WriteString(templateAPI)
+	case ServerAPISchema:
+		fp.WriteString(templateServerAPISchema)
 	case ClientApplicationTs:
 		fp.WriteString(templateApplicationTs)
 	default:

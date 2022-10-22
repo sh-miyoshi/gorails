@@ -393,7 +393,7 @@ var templateView = `const {{.Type}}{{.Method}} = () => {
 export default {{.Type}}{{.Method}}
 `
 
-var templateAPI = `package schema
+var templateServerAPISchema = `package schema
 
 // GORAILS MARKER Don't edit this line
 `
