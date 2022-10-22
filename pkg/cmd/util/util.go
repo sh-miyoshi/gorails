@@ -10,13 +10,11 @@ import (
 
 func RunCommand(name string, args ...string) {
 	c := exec.Command(name, args...)
-	out, err := c.Output()
-	if err != nil {
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+	if err := c.Run(); err != nil {
 		fmt.Printf("Failed to run %s %v: %+v", name, args, err)
 		os.Exit(1)
-	}
-	if len(out) > 0 {
-		fmt.Println(string(out))
 	}
 }
 
