@@ -20,10 +20,12 @@ func init() {
 	generateCmd.AddCommand(genControllerCmd)
 	generateCmd.AddCommand(genModelCmd)
 	generateCmd.AddCommand(genViewCmd)
+	generateCmd.AddCommand(genAPICmd)
 	genControllerCmd.Flags().StringArray("methods", []string{}, "method name list of controller")
 	genModelCmd.Flags().StringArray("columns", []string{}, "column list of model. please set by <Key>:<type> format")
 	genViewCmd.Flags().String("method", "", "method name of view")
 	genViewCmd.MarkFlagRequired("method")
+	genAPICmd.Flags().StringArray("columns", []string{}, "column list of resource. please set by <Key>:<type> format")
 }
 
 var generateCmd = &cobra.Command{
@@ -165,6 +167,26 @@ var genViewCmd = &cobra.Command{
 		templates.Exec(templates.View, fname, data)
 
 		// TODO Add to route in index.tsx
+	},
+}
+
+var genAPICmd = &cobra.Command{
+	Use:   "api",
+	Short: "generate api",
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) < 1 {
+			fmt.Println("generate api command requires resource name")
+			fmt.Println("e.g. gorails generate api user")
+			os.Exit(1)
+		}
+
+		resName := args[0]
+		fmt.Printf("generating resource name: %s\n", resName)
+
+		// やること
+		// server側にstructを作成
+		// util.AppendLine("app/schema/api_schema.go", )
+		// client側があればapplicatin.tsに追加
 	},
 }
 
