@@ -219,6 +219,8 @@ var genAPICmd = &cobra.Command{
 			dstFile = "client/src/types/application.ts"
 			templates.Exec(templates.ClientApplicationTs, dstFile, resources)
 		}
+
+		fmt.Printf("Successfully generate api schema for client by %s\n", defFile)
 	},
 }
 
