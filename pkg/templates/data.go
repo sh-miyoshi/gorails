@@ -418,11 +418,11 @@ var templateAPISchemaYaml = `# Difines of API Schema
 #
 # e.g.
 # - type: Item
-#		columns:
+#   columns:
 #     - key: value
 #       format: string
 # - type: User
-#		columns:
+#   columns:
 #     - key: id
 #       format: string
 #     - key: name
