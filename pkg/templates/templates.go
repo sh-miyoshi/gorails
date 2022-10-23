@@ -118,9 +118,19 @@ func Exec(templateType int, dstFile string, data any) {
 		}
 		tpl.Execute(fp, data)
 	case ServerAPISchemaGo:
-		fp.WriteString(templateServerAPISchema)
+		tpl, err := template.New("").Parse(templateServerAPISchema)
+		if err != nil {
+			fmt.Printf("Failed to parse %s: %+v", dstFile, err)
+			os.Exit(1)
+		}
+		tpl.Execute(fp, data)
 	case ClientApplicationTs:
-		fp.WriteString(templateApplicationTs)
+		tpl, err := template.New("").Parse(templateApplicationTs)
+		if err != nil {
+			fmt.Printf("Failed to parse %s: %+v", dstFile, err)
+			os.Exit(1)
+		}
+		tpl.Execute(fp, data)
 	case APISchemaYaml:
 		fp.WriteString(templateAPISchemaYaml)
 	default:

@@ -8,6 +8,7 @@ import (
 	"github.com/sh-miyoshi/gorails/pkg/cmd/util"
 	"github.com/sh-miyoshi/gorails/pkg/templates"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v2"
 )
 
 type Column struct {
@@ -25,7 +26,7 @@ func init() {
 	genModelCmd.Flags().StringArray("columns", []string{}, "column list of model. please set by <Key>:<type> format")
 	genViewCmd.Flags().String("method", "", "method name of view")
 	genViewCmd.MarkFlagRequired("method")
-	genAPICmd.Flags().StringArray("columns", []string{}, "column list of resource. please set by <Key>:<type> format")
+	genAPICmd.Flags().String("file", "config/api_schema.yaml", "file name of api schema")
 }
 
 var generateCmd = &cobra.Command{
@@ -174,39 +175,61 @@ var genAPICmd = &cobra.Command{
 	Use:   "api",
 	Short: "generate api",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			fmt.Println("generate api command requires resource name")
-			fmt.Println("e.g. gorails generate api user")
+		type APIResource struct {
+			Type    string `yaml:"type"`
+			Columns []struct {
+				Key    string `yaml:"key"`
+				Format string `yaml:"format"`
+				Tag    string
+			} `yaml:"columns"`
+		}
+
+		defFile, _ := cmd.Flags().GetString("file")
+		fp, err := os.Open(defFile)
+		if err != nil {
+			fmt.Printf("Failed to open api schema file %s: %+v\n", defFile, err)
 			os.Exit(1)
 		}
+		defer fp.Close()
 
-		resName := args[0]
-		resName = strings.ToUpper(resName[:1]) + strings.ToLower(resName[1:])
-		fmt.Printf("generating resource name: %s\n", resName)
-
-		columns := parseColumns(cmd)
-
-		// Generate struct to server
-		fname := "app/schema/api_schema.go"
-		data := fmt.Sprintf("type %s struct {", resName)
-		for _, c := range columns {
-			data += fmt.Sprintf("%s %s `json:\"%s\"`", c.Key, c.Value, util.CamelToSnake(c.Key))
+		var resources []APIResource
+		if err := yaml.NewDecoder(fp).Decode(&resources); err != nil {
+			fmt.Printf("Failed to parse api schema: %+v\n", err)
+			os.Exit(1)
 		}
-		data += "}"
-		util.AppendLine(fname, data)
-		util.RunCommand("go", "fmt", fname)
-
-		// Add to client/application.ts if client is installed
-		if util.FileExists("client") {
-			os.Chdir("client")
-			fname = "src/types/application.ts"
-			data = fmt.Sprintf("export interface %s {", resName)
-			for _, c := range columns {
-				data += fmt.Sprintf("%s: %s", util.CamelToSnake(c.Key), c.Value)
+		for i := 0; i < len(resources); i++ {
+			resources[i].Type = strings.ToUpper(resources[i].Type[:1]) + strings.ToLower(resources[i].Type[1:])
+			for j := 0; j < len(resources[i].Columns); j++ {
+				key := resources[i].Columns[j].Key
+				resources[i].Columns[j].Key = strings.ToUpper(key[:1]) + strings.ToLower(key[1:])
+				tag := util.CamelToSnake(resources[i].Columns[j].Key)
+				resources[i].Columns[j].Tag = fmt.Sprintf("`json:\"%s\"`", tag)
 			}
-			data += "}"
-			util.AppendLine(fname, data)
 		}
+		// Generate struct to server
+		dstFile := "app/schema/api_schema.go"
+		data := struct {
+			Resources []APIResource
+		}{
+			Resources: resources,
+		}
+
+		templates.Exec(templates.ServerAPISchemaGo, dstFile, data)
+		util.RunCommand("go", "fmt", dstFile)
+
+		fmt.Printf("Successfully generate api schema for server by %s\n", defFile)
+
+		// // Add to client/application.ts if client is installed
+		// if util.FileExists("client") {
+		// 	os.Chdir("client")
+		// 	fname = "src/types/application.ts"
+		// 	data = fmt.Sprintf("export interface %s {", resName)
+		// 	for _, c := range columns {
+		// 		data += fmt.Sprintf("%s: %s", util.CamelToSnake(c.Key), c.Value)
+		// 	}
+		// 	data += "}"
+		// 	util.AppendLine(fname, data)
+		// }
 	},
 }
 
