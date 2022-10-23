@@ -67,9 +67,9 @@ var genControllerCmd = &cobra.Command{
 
 		// Write controller struct
 		methods, _ := cmd.Flags().GetStringArray("methods")
-		controllerName := strings.ToUpper(resName[:1]) + strings.ToLower(resName[1:])
+		controllerName := util.ToTitle(resName)
 		for i := 0; i < len(methods); i++ {
-			methods[i] = controllerName + strings.ToUpper(methods[i][:1]) + strings.ToLower(methods[i][1:])
+			methods[i] = controllerName + util.ToTitle(methods[i])
 		}
 
 		data := struct {
@@ -110,7 +110,7 @@ var genModelCmd = &cobra.Command{
 		}
 
 		// Write model struct
-		modelName := strings.ToUpper(resName[:1]) + strings.ToLower(resName[1:])
+		modelName := util.ToTitle(resName)
 		data := struct {
 			ModelName string
 			Columns   []Column
@@ -166,8 +166,8 @@ var genViewCmd = &cobra.Command{
 			Method   string
 			FilePath string
 		}{
-			Type:     strings.ToUpper(resName[:1]) + strings.ToLower(resName[1:]),
-			Method:   strings.ToUpper(method[:1]) + strings.ToLower(method[1:]),
+			Type:     util.ToTitle(resName),
+			Method:   util.ToTitle(method),
 			FilePath: fname,
 		}
 		templates.Exec(templates.View, fname, data)
@@ -203,10 +203,9 @@ var genAPICmd = &cobra.Command{
 			os.Exit(1)
 		}
 		for i := 0; i < len(resources); i++ {
-			resources[i].Type = strings.ToUpper(resources[i].Type[:1]) + strings.ToLower(resources[i].Type[1:])
+			resources[i].Type = util.ToTitle(resources[i].Type)
 			for j := 0; j < len(resources[i].Columns); j++ {
-				key := resources[i].Columns[j].Key
-				resources[i].Columns[j].Key = strings.ToUpper(key[:1]) + strings.ToLower(key[1:])
+				resources[i].Columns[j].Key = util.ToTitle(resources[i].Columns[j].Key)
 				resources[i].Columns[j].Format = convertFormat(resources[i].Columns[j].Format, formatTypeGo)
 				tag := util.CamelToSnake(resources[i].Columns[j].Key)
 				resources[i].Columns[j].Tag = fmt.Sprintf("`json:\"%s\"`", tag)
@@ -244,7 +243,7 @@ func parseColumns(cmd *cobra.Command) []Column {
 			os.Exit(1)
 		}
 		key := strings.TrimSpace(d[0])
-		key = strings.ToUpper(key[:1]) + strings.ToLower(key[1:])
+		key = util.ToTitle(key)
 		res = append(res, Column{Key: key, Value: strings.TrimSpace(d[1])})
 	}
 

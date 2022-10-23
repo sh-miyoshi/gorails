@@ -82,3 +82,7 @@ func CamelToSnake(s string) string {
 	snake = strings.ToLower(snake)
 	return snake
 }
+
+func ToTitle(s string) string {
+	return strings.ToUpper(s[:1]) + strings.ToLower(s[1:])
+}
