@@ -409,9 +409,9 @@ var templateAPISchemaYaml = `# Difines of API Schema
 # Item:
 #   value: string
 # User:
-# 	id: string
-# 	name: string
-# 	status: int
+#   id: string
+#   name: string
+#   status: int
 #   active: boolean
 #   items: []Item
 
