@@ -43,21 +43,25 @@ var newCmd = &cobra.Command{
 			fmt.Printf("Directory %s will not empty\n", projectName)
 			os.Exit(1)
 		}
+		os.Chdir(projectName)
 
-		os.Mkdir(fmt.Sprintf("%s/app", projectName), 0755)
-		os.Mkdir(fmt.Sprintf("%s/app/controllers", projectName), 0755)
-		os.Mkdir(fmt.Sprintf("%s/app/models", projectName), 0755)
-		os.Mkdir(fmt.Sprintf("%s/app/schema", projectName), 0755)
-		os.Mkdir(fmt.Sprintf("%s/config", projectName), 0755)
-		os.Mkdir(fmt.Sprintf("%s/db", projectName), 0755)
-		os.Mkdir(fmt.Sprintf("%s/log", projectName), 0755)
-		os.Mkdir(fmt.Sprintf("%s/system", projectName), 0755)
+		os.Mkdir("app", 0755)
+		os.Mkdir("app/controllers", 0755)
+		os.Mkdir("app/models", 0755)
+		os.Mkdir("app/schema", 0755)
+		os.Mkdir("config", 0755)
+		os.Mkdir("db", 0755)
+		os.Mkdir("log", 0755)
+		os.Mkdir("system", 0755)
+		os.Mkdir("build", 0755)
 
 		fmt.Println("Successfully created base directories")
 
 		projectPath, _ := cmd.Flags().GetString("project-path")
 		projectPath = strings.TrimSuffix(projectPath, "/")
 		projectPath += "/" + projectName
+
+		// TODO: write projectPath to file
 
 		ext := "out"
 		if runtime.GOOS == "windows" {
@@ -70,18 +74,18 @@ var newCmd = &cobra.Command{
 			DBName:      "app",
 			ServerExt:   ext,
 		}
-		templates.Exec(templates.ModelBase, fmt.Sprintf("%s/app/models/base.go", projectName), nil)
-		templates.Exec(templates.DatabaseYaml, fmt.Sprintf("%s/config/database.yaml", projectName), vals)
-		templates.Exec(templates.HotReloader, fmt.Sprintf("%s/config/hot_reloader.toml", projectName), vals)
-		templates.Exec(templates.Routes, fmt.Sprintf("%s/config/routes.go", projectName), nil)
-		templates.Exec(templates.Migration, fmt.Sprintf("%s/db/migration.go", projectName), vals)
-		templates.Exec(templates.DockerCompose, fmt.Sprintf("%s/docker-compose.yml", projectName), vals)
-		templates.Exec(templates.GitIgnore, fmt.Sprintf("%s/.gitignore", projectName), nil)
-		templates.Exec(templates.MainGo, fmt.Sprintf("%s/main.go", projectName), vals)
-		templates.Exec(templates.SystemModel, fmt.Sprintf("%s/system/model.go", projectName), vals)
-		templates.Exec(templates.SystemUtil, fmt.Sprintf("%s/system/util.go", projectName), nil)
-		templates.Exec(templates.ServerAPISchemaGo, fmt.Sprintf("%s/app/schema/api_schema.go", projectName), nil)
-		templates.Exec(templates.APISchemaYaml, fmt.Sprintf("%s/config/api_schema.yaml", projectName), nil)
+		templates.Exec(templates.ModelBase, "app/models/base.go", nil)
+		templates.Exec(templates.DatabaseYaml, "config/database.yaml", vals)
+		templates.Exec(templates.HotReloader, "config/hot_reloader.toml", vals)
+		templates.Exec(templates.Routes, "config/routes.go", nil)
+		templates.Exec(templates.Migration, "db/migration.go", vals)
+		templates.Exec(templates.DockerCompose, "docker-compose.yml", vals)
+		templates.Exec(templates.GitIgnore, ".gitignore", nil)
+		templates.Exec(templates.MainGo, "main.go", vals)
+		templates.Exec(templates.SystemModel, "system/model.go", vals)
+		templates.Exec(templates.SystemUtil, "system/util.go", nil)
+		templates.Exec(templates.ServerAPISchemaGo, "app/schema/api_schema.go", nil)
+		templates.Exec(templates.APISchemaYaml, "config/api_schema.yaml", nil)
 
 		fmt.Println("Successfully copied system files")
 
