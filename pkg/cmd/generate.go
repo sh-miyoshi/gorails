@@ -184,10 +184,12 @@ var genAPICmd = &cobra.Command{
 		resName = strings.ToUpper(resName[:1]) + strings.ToLower(resName[1:])
 		fmt.Printf("generating resource name: %s\n", resName)
 
+		columns := parseColumns(cmd)
+
 		// Generate struct to server
 		fname := "app/schema/api_schema.go"
 		data := fmt.Sprintf("type %s struct {", resName)
-		for _, c := range parseColumns(cmd) {
+		for _, c := range columns {
 			data += fmt.Sprintf("%s %s `json:\"%s\"`", c.Key, c.Value, util.CamelToSnake(c.Key))
 		}
 		data += "}"
@@ -195,6 +197,16 @@ var genAPICmd = &cobra.Command{
 		util.RunCommand("go", "fmt", fname)
 
 		// Add to client/application.ts if client is installed
+		if util.FileExists("client") {
+			os.Chdir("client")
+			fname = "src/types/application.ts"
+			data = fmt.Sprintf("export interface %s {", resName)
+			for _, c := range columns {
+				data += fmt.Sprintf("%s: %s", util.CamelToSnake(c.Key), c.Value)
+			}
+			data += "}"
+			util.AppendLine(fname, data)
+		}
 	},
 }
 
