@@ -433,6 +433,4 @@ var templateAPISchemaYaml = `# Difines of API Schema
 #       format: boolean
 #     - key: items
 #       format: []Item
-
-# GORAILS MARKER Don't edit this line
 `
