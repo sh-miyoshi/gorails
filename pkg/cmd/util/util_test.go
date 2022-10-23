@@ -5,6 +5,27 @@ import (
 	"testing"
 )
 
+func TestFileExists(t *testing.T) {
+	// Case 1 check exists file
+	file, _ := os.CreateTemp("", "")
+	defer os.Remove(file.Name())
+	if !FileExists(file.Name()) {
+		t.Errorf("Case 1 failed. expect true, but got false")
+	}
+
+	// Case 2 check do not exist file or directory
+	if FileExists("dummy") {
+		t.Errorf("Case 2 failed. expect false, but got true")
+	}
+
+	// Case 3 check exists directory
+	dir := os.TempDir()
+	defer os.Remove(dir)
+	if !FileExists(dir) {
+		t.Errorf("Case 3 failed. expect true, but got false")
+	}
+}
+
 func TestAppendLine(t *testing.T) {
 	// Case 1 a file with marker
 	f1, _ := os.CreateTemp("", "")
