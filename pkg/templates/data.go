@@ -397,3 +397,23 @@ var templateServerAPISchema = `package schema
 
 // GORAILS MARKER Don't edit this line
 `
+
+var templateAPISchemaYaml = `# Difines of API Schema
+# Please set like this
+# <Type>:
+#   <key>: <format>
+#
+# supported format type is string, int, boolean, [], and custom object
+#
+# e.g.
+# Item:
+#   value: string
+# User:
+# 	id: string
+# 	name: string
+# 	status: int
+#   active: boolean
+#   items: []Item
+
+# GORAILS MARKER Don't edit this line
+`
