@@ -16,6 +16,11 @@ type Column struct {
 	Value string
 }
 
+const (
+	formatTypeGo int = iota
+	formatTypeJS
+)
+
 func init() {
 	rootCmd.AddCommand(generateCmd)
 	generateCmd.AddCommand(genControllerCmd)
@@ -202,19 +207,14 @@ var genAPICmd = &cobra.Command{
 			for j := 0; j < len(resources[i].Columns); j++ {
 				key := resources[i].Columns[j].Key
 				resources[i].Columns[j].Key = strings.ToUpper(key[:1]) + strings.ToLower(key[1:])
+				resources[i].Columns[j].Format = convertFormat(resources[i].Columns[j].Format, formatTypeGo)
 				tag := util.CamelToSnake(resources[i].Columns[j].Key)
 				resources[i].Columns[j].Tag = fmt.Sprintf("`json:\"%s\"`", tag)
 			}
 		}
 		// Generate struct to server
 		dstFile := "app/schema/api_schema.go"
-		data := struct {
-			Resources []APIResource
-		}{
-			Resources: resources,
-		}
-
-		templates.Exec(templates.ServerAPISchemaGo, dstFile, data)
+		templates.Exec(templates.ServerAPISchemaGo, dstFile, resources)
 		util.RunCommand("go", "fmt", dstFile)
 
 		fmt.Printf("Successfully generate api schema for server by %s\n", defFile)
@@ -249,4 +249,39 @@ func parseColumns(cmd *cobra.Command) []Column {
 	}
 
 	return res
+}
+
+func convertFormat(s string, formatType int) string {
+	prefix := ""
+	suffix := ""
+	if strings.Contains(s, "[]") {
+		switch formatType {
+		case formatTypeGo:
+			prefix = "[]"
+		case formatTypeJS:
+			suffix = "[]"
+		}
+	}
+
+	switch strings.ReplaceAll(s, "[]", "") {
+	case "string":
+		return prefix + "string" + suffix
+	case "int":
+		switch formatType {
+		case formatTypeGo:
+			return prefix + "int" + suffix
+		case formatTypeJS:
+			return prefix + "number" + suffix
+		}
+	case "boolean":
+		switch formatType {
+		case formatTypeGo:
+			return prefix + "bool" + suffix
+		case formatTypeJS:
+			return prefix + "boolean" + suffix
+		}
+	}
+
+	// maybe custom format
+	return s
 }
