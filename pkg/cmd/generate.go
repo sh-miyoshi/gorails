@@ -183,9 +183,12 @@ var genAPICmd = &cobra.Command{
 		type APIResource struct {
 			Type    string `yaml:"type"`
 			Columns []struct {
-				Key    string `yaml:"key"`
-				Format string `yaml:"format"`
-				Tag    string
+				Key      string `yaml:"key"`
+				Format   string `yaml:"format"`
+				GoFormat string
+				JSFormat string
+				SnakeKey string
+				Tag      string
 			} `yaml:"columns"`
 		}
 
@@ -206,9 +209,10 @@ var genAPICmd = &cobra.Command{
 			resources[i].Type = util.ToTitle(resources[i].Type)
 			for j := 0; j < len(resources[i].Columns); j++ {
 				resources[i].Columns[j].Key = util.ToTitle(resources[i].Columns[j].Key)
-				resources[i].Columns[j].Format = convertFormat(resources[i].Columns[j].Format, formatTypeGo)
-				tag := util.CamelToSnake(resources[i].Columns[j].Key)
-				resources[i].Columns[j].Tag = fmt.Sprintf("`json:\"%s\"`", tag)
+				resources[i].Columns[j].GoFormat = convertFormat(resources[i].Columns[j].Format, formatTypeGo)
+				resources[i].Columns[j].JSFormat = convertFormat(resources[i].Columns[j].Format, formatTypeJS)
+				resources[i].Columns[j].SnakeKey = util.CamelToSnake(resources[i].Columns[j].Key)
+				resources[i].Columns[j].Tag = fmt.Sprintf("`json:\"%s\"`", resources[i].Columns[j].SnakeKey)
 			}
 		}
 		// Generate struct to server
@@ -218,17 +222,11 @@ var genAPICmd = &cobra.Command{
 
 		fmt.Printf("Successfully generate api schema for server by %s\n", defFile)
 
-		// // Add to client/application.ts if client is installed
-		// if util.FileExists("client") {
-		// 	os.Chdir("client")
-		// 	fname = "src/types/application.ts"
-		// 	data = fmt.Sprintf("export interface %s {", resName)
-		// 	for _, c := range columns {
-		// 		data += fmt.Sprintf("%s: %s", util.CamelToSnake(c.Key), c.Value)
-		// 	}
-		// 	data += "}"
-		// 	util.AppendLine(fname, data)
-		// }
+		// Add to client/application.ts if client is installed
+		if util.FileExists("client") {
+			dstFile = "client/src/types/application.ts"
+			templates.Exec(templates.ClientApplicationTs, dstFile, resources)
+		}
 	},
 }
 

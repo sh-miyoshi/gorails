@@ -401,7 +401,7 @@ var templateServerAPISchema = `package schema
 {{ range . }}
 type {{ .Type }} struct {
 {{ range .Columns }}
-	{{ .Key }} {{ .Format }} {{ .Tag }}
+	{{ .Key }} {{ .GoFormat }} {{ .Tag }}
 {{ end }}
 }
 {{ end }}
