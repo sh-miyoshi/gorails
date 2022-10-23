@@ -8,7 +8,6 @@ import (
 	"github.com/sh-miyoshi/gorails/pkg/cmd/util"
 	"github.com/sh-miyoshi/gorails/pkg/templates"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v2"
 )
 
 type Column struct {
@@ -192,17 +191,10 @@ var genAPICmd = &cobra.Command{
 			} `yaml:"columns"`
 		}
 
-		defFile, _ := cmd.Flags().GetString("file")
-		fp, err := os.Open(defFile)
-		if err != nil {
-			fmt.Printf("Failed to open api schema file %s: %+v\n", defFile, err)
-			os.Exit(1)
-		}
-		defer fp.Close()
-
 		var resources []APIResource
-		if err := yaml.NewDecoder(fp).Decode(&resources); err != nil {
-			fmt.Printf("Failed to parse api schema: %+v\n", err)
+		defFile, _ := cmd.Flags().GetString("file")
+		if err := util.ReadYaml(defFile, &resources); err != nil {
+			fmt.Printf("Failed to get %s data: %+v\n", defFile, err)
 			os.Exit(1)
 		}
 		for i := 0; i < len(resources); i++ {

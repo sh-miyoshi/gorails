@@ -6,6 +6,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 func RunCommand(name string, args ...string) {
@@ -85,4 +87,17 @@ func CamelToSnake(s string) string {
 
 func ToTitle(s string) string {
 	return strings.ToUpper(s[:1]) + strings.ToLower(s[1:])
+}
+
+func ReadYaml(fname string, dist interface{}) error {
+	fp, err := os.Open(fname)
+	if err != nil {
+		return fmt.Errorf("failed to open file: %w", err)
+	}
+	defer fp.Close()
+
+	if err := yaml.NewDecoder(fp).Decode(dist); err != nil {
+		return fmt.Errorf("failed to parse yaml: %w", err)
+	}
+	return nil
 }
