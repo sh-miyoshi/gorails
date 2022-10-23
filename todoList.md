@@ -2,9 +2,7 @@
 
 ## 全体
 
-- api interfaceを自動で作ってもいいかも
-  - server側のinterface定義
-  - client側のinterface定義
+- 認証・ログイン処理をどうするか
 
 ## コマンド一覧
 
@@ -18,7 +16,7 @@
 
 ### client
 
-(Nice to have)ServerAddressを環境変数などから設定できるようにする
+ServerAddressを環境変数などから設定できるようにする
 
 ### build
 
