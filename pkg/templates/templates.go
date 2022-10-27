@@ -28,6 +28,8 @@ const (
 	ClientApplicationTs
 	APISchemaYaml
 	ProjectPath
+	SystemSPAHandler
+	DockerfileAll
 )
 
 func Exec(templateType int, dstFile string, data any) {
@@ -84,6 +86,10 @@ func Exec(templateType int, dstFile string, data any) {
 		fp.WriteString(templateAPISchemaYaml)
 	case ProjectPath:
 		tpl, err = template.New("").Parse(templateProjectPath)
+	case SystemSPAHandler:
+		fp.WriteString(templateSystemSPAHandler)
+	case DockerfileAll:
+		fp.WriteString(templateDockerfileAll)
 	default:
 		fmt.Printf("System error: template type %d is not implemented yet\n", templateType)
 		os.Exit(1)
