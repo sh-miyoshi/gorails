@@ -60,8 +60,6 @@ var newCmd = &cobra.Command{
 		projectPath, _ := cmd.Flags().GetString("project-path")
 		projectPath = strings.TrimSuffix(projectPath, "/")
 
-		// TODO: write projectPath to file
-
 		ext := "out"
 		if runtime.GOOS == "windows" {
 			ext = "exe"
@@ -73,6 +71,7 @@ var newCmd = &cobra.Command{
 			DBName:      "app",
 			ServerExt:   ext,
 		}
+		templates.Exec(templates.ProjectPath, ".gorails-project", vals)
 		templates.Exec(templates.ModelBase, "app/models/base.go", nil)
 		templates.Exec(templates.DatabaseYaml, "config/database.yaml", vals)
 		templates.Exec(templates.HotReloader, "config/hot_reloader.toml", vals)
