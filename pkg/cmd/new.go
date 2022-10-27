@@ -20,7 +20,7 @@ type templateValue struct {
 func init() {
 	rootCmd.AddCommand(newCmd)
 	newCmd.Flags().Bool("skip-client", false, "Skip installing client")
-	newCmd.Flags().String("project-path", "", "[Required] project path. e.g. github.com/sh-miyoshi")
+	newCmd.Flags().String("project-path", "", "[Required] project path. e.g. github.com/sh-miyoshi/sample-project")
 	newCmd.MarkFlagRequired("project-path")
 }
 
@@ -59,7 +59,6 @@ var newCmd = &cobra.Command{
 
 		projectPath, _ := cmd.Flags().GetString("project-path")
 		projectPath = strings.TrimSuffix(projectPath, "/")
-		projectPath += "/" + projectName
 
 		// TODO: write projectPath to file
 
