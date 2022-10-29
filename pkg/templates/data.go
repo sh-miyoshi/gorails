@@ -315,28 +315,6 @@ watcher = "cyan"
 # clean_on_exit = true
 `
 
-var templateDockerfileServer = `FROM golang:1.19 as builder
-
-WORKDIR /app
-COPY system system
-COPY config config
-COPY go.mod go.mod
-COPY go.sum go.sum
-COPY main.go main.go
-COPY db db
-COPY app app
-RUN go build -o server
-
-
-FROM ubuntu:22.04
-
-COPY --from=builder /app/server /bin/server
-RUN mkdir -p /etc/app
-COPY config config
-
-CMD ["server"]
-`
-
 var templateModel = fmt.Sprintf(`package models
 
 import (
@@ -519,4 +497,47 @@ RUN mkdir -p config
 COPY config/database.yaml config/database.yaml
 COPY --from=client-builder /app/client/build build
 CMD [ "./server.out" ]
+`
+
+var templateDockerfileServer = `FROM golang as server-builder
+
+ENV GOOS linux
+ENV ENV production
+WORKDIR /app
+COPY system system
+COPY db db
+COPY main.go .
+COPY config config
+COPY go.mod .
+COPY go.sum .
+COPY app app
+
+RUN go build -o server.out
+
+
+FROM ubuntu:22.04
+
+ENV ENV production
+WORKDIR /app
+COPY --from=server-builder /app/server.out .
+RUN mkdir -p config
+COPY config/database.yaml config/database.yaml
+CMD [ "./server.out" ]
+`
+
+var templateDockerfileClient = `FROM node as client-builder
+
+WORKDIR /app
+COPY client client
+WORKDIR /app/client
+RUN npm install --production
+RUN npm run build
+
+
+FROM node:slim
+
+WORKDIR /app
+RUN npm install -g serve
+COPY --from=client-builder /app/client/build build
+CMD ["serve", "-s", "build"]
 `

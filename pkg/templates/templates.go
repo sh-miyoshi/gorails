@@ -17,7 +17,6 @@ const (
 	SystemModel
 	SystemUtil
 	DockerCompose
-	DockerfileServer
 	ClientTsConfig
 	ClientIndex
 	ClientHttpRequest
@@ -30,6 +29,8 @@ const (
 	ProjectPath
 	SystemSPAHandler
 	DockerfileAll
+	DockerfileServer
+	DockerfileClient
 )
 
 func Exec(templateType int, dstFile string, data any) {
@@ -64,8 +65,6 @@ func Exec(templateType int, dstFile string, data any) {
 		fp.WriteString(templateRoutes)
 	case HotReloader:
 		tpl, err = template.New("").Parse(templateHotReloader)
-	case DockerfileServer:
-		fp.WriteString(templateDockerfileServer)
 	case ClientTsConfig:
 		fp.WriteString(templateClientTsConfig)
 	case ClientIndex:
@@ -90,6 +89,10 @@ func Exec(templateType int, dstFile string, data any) {
 		fp.WriteString(templateSystemSPAHandler)
 	case DockerfileAll:
 		fp.WriteString(templateDockerfileAll)
+	case DockerfileServer:
+		fp.WriteString(templateDockerfileServer)
+	case DockerfileClient:
+		fp.WriteString(templateDockerfileClient)
 	default:
 		fmt.Printf("System error: template type %d is not implemented yet\n", templateType)
 		os.Exit(1)

@@ -86,6 +86,8 @@ var newCmd = &cobra.Command{
 		templates.Exec(templates.ServerAPISchemaGo, "app/schema/api_schema.go", nil)
 		templates.Exec(templates.APISchemaYaml, "config/api_schema.yaml", nil)
 		templates.Exec(templates.DockerfileAll, "build/Dockerfile.all", nil)
+		templates.Exec(templates.DockerfileServer, "build/Dockerfile.server", nil)
+		templates.Exec(templates.DockerfileClient, "build/Dockerfile.client", nil)
 
 		fmt.Println("Successfully copied system files")
 
