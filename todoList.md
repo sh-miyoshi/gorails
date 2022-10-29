@@ -17,10 +17,3 @@
 ### client
 
 ServerAddressを環境変数などから設定できるようにする
-
-### build
-
-本番用コンテナの作成
-all-in-one(in postgres?)とserver/client
-all-in-oneはdocker composeで？
-server and clientイメージとDBイメージの2つ
