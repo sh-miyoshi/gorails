@@ -38,14 +38,16 @@ var buildCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		tag, _ := cmd.Flags().GetString("tag")
-		image := strings.Trim(string(project), "\n") + ":" + tag
+		image := strings.Trim(string(project), "\n")
 
 		switch target {
 		case "all":
-			util.RunCommand("docker", "build", "-f", "build/Dockerfile.all", "-t", image, ".")
+			util.RunCommand("docker", "build", "-f", "build/Dockerfile.all", "-t", image+":"+tag, ".")
 		case "separate":
-			panic("TODO: WIP")
-			// TODO build server, build client if exists
+			util.RunCommand("docker", "build", "-f", "build/Dockerfile.server", "-t", image+"-server:"+tag, ".")
+			if clientExists {
+				util.RunCommand("docker", "build", "-f", "build/Dockerfile.client", "-t", image+"-client:"+tag, ".")
+			}
 		}
 	},
 }
