@@ -91,11 +91,6 @@ var newCmd = &cobra.Command{
 
 		fmt.Println("Successfully copied system files")
 
-		if err := os.Chdir(projectName); err != nil {
-			fmt.Printf("Failed to change directory to %s: %+v", projectName, err)
-			os.Exit(1)
-		}
-
 		// Run go initialization
 		util.RunCommand("go", "mod", "init", projectPath)
 		util.RunCommand("go", "get")
