@@ -63,6 +63,7 @@ func main() {
 
 	r := mux.NewRouter()
 	config.SetRoutes(r)
+	r.Use(config.Middlewares()...)
 
 	log.Println("Successfully set routes")
 
@@ -273,6 +274,21 @@ func SetRoutes(r *mux.Router) {
 	// Ucomment if you want to serve Single Page Application(SPA)
 	// spa := system.SPAHandler{StaticPath: "build", IndexPath: "index.html"}
 	// r.PathPrefix("/").Handler(spa)
+}
+`
+
+var templateMiddlewares = `package config
+
+import (
+	"github.com/gorilla/mux"
+)
+
+func Middlewares() []mux.MiddlewareFunc {
+	res := []mux.MiddlewareFunc{}
+
+	// Please set middlewares
+
+	return res
 }
 `
 

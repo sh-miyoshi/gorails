@@ -13,6 +13,7 @@ const (
 	DatabaseYaml
 	HotReloader
 	Routes
+	Middlewares
 	Migration
 	SystemModel
 	SystemUtil
@@ -63,6 +64,8 @@ func Exec(templateType int, dstFile string, data any) {
 		tpl, err = template.New("").Parse(templateMigration)
 	case Routes:
 		fp.WriteString(templateRoutes)
+	case Middlewares:
+		fp.WriteString(templateMiddlewares)
 	case HotReloader:
 		tpl, err = template.New("").Parse(templateHotReloader)
 	case ClientTsConfig:

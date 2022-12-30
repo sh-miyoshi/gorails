@@ -76,6 +76,7 @@ var newCmd = &cobra.Command{
 		templates.Exec(templates.DatabaseYaml, "config/database.yaml", vals)
 		templates.Exec(templates.HotReloader, "config/hot_reloader.toml", vals)
 		templates.Exec(templates.Routes, "config/routes.go", nil)
+		templates.Exec(templates.Middlewares, "config/middlewares.go", nil)
 		templates.Exec(templates.Migration, "db/migration.go", vals)
 		templates.Exec(templates.DockerCompose, "docker-compose.yml", vals)
 		templates.Exec(templates.GitIgnore, ".gitignore", nil)
