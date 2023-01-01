@@ -264,16 +264,20 @@ func MigrateTargets() []models.Base {
 var templateRoutes = `package config
 
 import (
+	"net/http"
+
 	"github.com/gorilla/mux"
 )
 
 func SetRoutes(r *mux.Router) {
 	// Please set routes
-	// e.g. r.HandleFunc("/foo", controllers.FooIndex).Methods("GET")
+	// e.g. r.HandleFunc("/api/foo", controllers.FooIndex).Methods("GET")
 
 	// Ucomment if you want to serve Single Page Application(SPA)
 	// spa := system.SPAHandler{StaticPath: "build", IndexPath: "index.html"}
 	// r.PathPrefix("/").Handler(spa)
+
+	r.HandleFunc("/api/healthz", func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("ok")) })
 }
 `
 
