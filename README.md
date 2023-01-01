@@ -1,0 +1,3 @@
+# gorails
+
+gorailsはRuby on Railsを参考にした、go言語とReactでWebアプリケーションを作成するためのコマンドラインツールです
