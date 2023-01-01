@@ -13,12 +13,13 @@ var templateClientTsConfig = `{
 var templateClientIndex = `import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Index from './pages';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div>go rails app</div>} />
+        <Route path="/" element={<Index />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
@@ -67,4 +68,31 @@ var templateApplicationTs = `// This file will create automatically by gorails c
 export interface {{ .Type }} {
 {{ range .Columns }}	{{ .SnakeKey }}: {{ .JSFormat }}{{ end }}
 }{{ end }}
+`
+
+var templateClientIndexPageContent = `import React, { useState, useEffect } from 'react';
+import { httpRequest } from '../helpers/http_request';
+
+const Index = () => {
+  const [serverHealth, setServerHealth] = useState<string>("No...")
+
+  useEffect(() => {
+    httpRequest<string>('get', "http://localhost:3100/api/healthz")
+      .then((res) => {
+        setServerHealth(res.data)
+      })
+      .catch((err) => {
+        window.console.error(err)
+      })
+  }, [setServerHealth])
+
+  return (
+    <div>
+      <h1>go rails app</h1>
+      <p>Server healthy: {serverHealth}</p>
+      <p>Find me in src/pages/index.tsx</p>
+    </div>
+  )
+}
+export default Index
 `

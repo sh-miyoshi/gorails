@@ -122,6 +122,7 @@ var newCmd = &cobra.Command{
 			templates.Exec(templates.ClientIndex, "src/index.tsx", nil)
 			templates.Exec(templates.ClientApplicationTs, "src/types/application.ts", nil)
 			templates.Exec(templates.ClientTsConfig, "tsconfig.json", nil)
+			templates.Exec(templates.ClientIndexPageContent, "src/pages/index.tsx", nil)
 			fmt.Println("Copied client system files")
 
 			fmt.Println("Successfully installed client")
