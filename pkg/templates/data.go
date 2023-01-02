@@ -40,6 +40,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"{{.ProjectPath}}/config"
 	"{{.ProjectPath}}/system"
@@ -63,6 +64,12 @@ func main() {
 
 	r := mux.NewRouter()
 	config.SetRoutes(r)
+	enableSPA := os.Getenv("ENABLE_SPA")
+	if strings.ToLower(enableSPA) != "true" {
+		spa := system.SPAHandler{StaticPath: "build", IndexPath: "index.html"}
+		r.PathPrefix("/").Handler(spa)
+	}
+
 	r.Use(config.Middlewares()...)
 
 	log.Println("Successfully set routes")
@@ -272,10 +279,6 @@ import (
 func SetRoutes(r *mux.Router) {
 	// Please set routes
 	// e.g. r.HandleFunc("/api/foo", controllers.FooIndex).Methods("GET")
-
-	// Ucomment if you want to serve Single Page Application(SPA)
-	// spa := system.SPAHandler{StaticPath: "build", IndexPath: "index.html"}
-	// r.PathPrefix("/").Handler(spa)
 
 	r.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("ok")) })
 }
