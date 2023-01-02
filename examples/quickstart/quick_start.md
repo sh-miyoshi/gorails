@@ -268,22 +268,42 @@ const TopicsShow = (props) => {
 export default TopicsShow
 ```
 
-WIP: /の時にリダイレクトするようにする
+トップページも不要なのでアクセスされるとTopic一覧ページにリダイレクトされるようにします
+
+```bash
+vi client/src/pages/index.tsx
+```
+
+```tsx
+import React, { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+
+const Index = () => {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    navigate("/topics")
+  })
+
+  return (
+    <div />
+  )
+}
+export default Index
+```
 
 ## 5. デプロイ用にコンテナイメージのビルド
 
-WIP
+```bash
+gorails build
+```
+
+buildコマンドでコンテナイメージをビルドできます
+生成されるコンテナのイメージ名は`github.com/sh-miyoshi/sample-project:latest`のように最初にプロジェクトパスとして設定した値になります
+デフォルトではサーバーとクライアントが一緒となった一つのイメージが作成されます
+サーバー/クライアントを分けたい場合は`--target=separate`を指定してください
+また、コンテナイメージのタグは`--tag`オプションで指定できます
 
 ## 6. デプロイ
 
 WIP
-
-## 7. more actions
-
-```bash
-# messagesの追加
-./gorails g model message --columns body:string --columns owner:string
-# WIP
-# topic modelにhas_manyで追加
-vi client/src/pages/topics/show/show.tsx
-```
