@@ -167,6 +167,7 @@ vi client/src/index.tsx
 まずはindex側からです
 Indexページではページロード時にTopic一覧をapi経由でサーバーから取得しtopics変数に格納します
 またCreateボタン押下時にサーバーにリクエストを投げ、追加します
+追加時には再度Topic一覧を表示するためにリロードしています
 またTopicの各行は詳細ページへのリンクとなっておりクリック時に詳細画面へ遷移します
 
 ```bash
@@ -174,7 +175,52 @@ vi client/src/pages/topics/index/index.tsx
 ```
 
 ```tsx
-WIP
+import React, { useState, useEffect } from 'react';
+import { httpRequest } from '../../../helpers/http_request';
+import { Topic } from '../../../types/application';
+
+const TopicsIndex = () => {
+  const [topics, setTopics] = useState<Topic[]>([])
+  const [title, setTitle] = useState<string>("")
+
+  const handleChange = (e) => {
+    setTitle(() => e.target.value)
+  }
+
+  const onCreate = () => {
+    httpRequest('post', `http://localhost:3100/api/topics`, { title: title })
+    window.location.reload()
+  }
+
+  useEffect(() => {
+    httpRequest<Topic[]>('get', `http://localhost:3100/api/topics`)
+      .then((res) => {
+        setTopics(res.data)
+      })
+      .catch((err) => {
+        window.console.error(err)
+      })
+  }, [setTopics])
+
+  return (
+    <div>
+      <h1>Topics</h1>
+      <div>
+        <ul>
+          {topics.map((t, i) => (
+            <li key={i}><a href={`/topics/${t.id}`}>{t.title}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        New Topic Title: <input type="text" value={title} onChange={handleChange} />
+        <button onClick={onCreate}>Create</button>
+      </div>
+    </div>
+  )
+}
+
+export default TopicsIndex
 ```
 
 続いて、詳細ページの実装です
@@ -222,7 +268,7 @@ const TopicsShow = (props) => {
 export default TopicsShow
 ```
 
-TODO: /の時にリダイレクトするようにする
+WIP: /の時にリダイレクトするようにする
 
 ## 5. デプロイ用にコンテナイメージのビルド
 
