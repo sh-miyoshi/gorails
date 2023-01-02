@@ -514,6 +514,7 @@ RUN npm run build
 FROM ubuntu:22.04
 
 ENV ENV production
+ENV ENABLE_SPA true
 WORKDIR /app
 COPY --from=server-builder /app/server.out .
 RUN mkdir -p config
