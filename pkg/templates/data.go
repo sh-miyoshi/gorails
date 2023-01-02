@@ -277,7 +277,7 @@ func SetRoutes(r *mux.Router) {
 	// spa := system.SPAHandler{StaticPath: "build", IndexPath: "index.html"}
 	// r.PathPrefix("/").Handler(spa)
 
-	r.HandleFunc("/api/healthz", func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("ok")) })
+	r.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("ok")) })
 }
 `
 

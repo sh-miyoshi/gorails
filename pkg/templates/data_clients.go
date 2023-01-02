@@ -77,7 +77,7 @@ const Index = () => {
   const [serverHealth, setServerHealth] = useState<string>("No...")
 
   useEffect(() => {
-    httpRequest<string>('get', "http://localhost:3100/api/healthz")
+    httpRequest<string>('get', "http://localhost:3100/healthz")
       .then((res) => {
         setServerHealth(res.data)
       })
