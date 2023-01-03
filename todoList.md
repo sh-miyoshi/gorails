@@ -16,7 +16,6 @@
 
 ### generate
 
-バグ: application.tsで改行されない
 (Nice to have)viewのmethodは複数設定できるようにしたい
 
 ### server
