@@ -24,5 +24,4 @@
 
 ### client
 
-current directoryがclientなら移動しない
 ServerAddressを環境変数などから設定できるようにする

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/sh-miyoshi/gorails/pkg/cmd/util"
 	"github.com/spf13/cobra"
@@ -16,7 +17,12 @@ var clientCmd = &cobra.Command{
 	Short: "Run development client",
 	Long:  `Run development client`,
 	Run: func(cmd *cobra.Command, args []string) {
-		os.Chdir("client")
+		absPath, _ := os.Getwd()
+		dir := filepath.Base(absPath)
+
+		if dir != "client" {
+			os.Chdir("client")
+		}
 		util.RunCommand("npm", "start")
 	},
 }
