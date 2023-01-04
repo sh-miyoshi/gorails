@@ -4,7 +4,7 @@
 
 ## 今回作成するWebアプリケーションの全体像
 
-![image_1](./image_1.png) ![pmage_2](./image_2.png)
+![image_1](./assets/image_1.png) ![pmage_2](./assets/image_2.png)
 
 ## 1. プロジェクトの作成
 
@@ -37,7 +37,7 @@ gorails client
 
 client/server側の両方がうまく起動している場合、以下のように表示されます。
 
-![success_image](./success.png)
+![success_image](./assets/success.png)
 
 ## 3. サーバー側の実装
 
