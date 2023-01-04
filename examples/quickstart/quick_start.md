@@ -4,7 +4,7 @@
 
 ## 今回作成するWebアプリケーションの全体像
 
-WIP
+![image_1](./image_1.png) ![pmage_2](./image_2.png)
 
 ## 1. プロジェクトの作成
 
@@ -59,6 +59,10 @@ controllerの作成では引数としてメソッドを指定できます。
 ```bash
 gorails generate controller topic --methods index --methods show --methods create
 vi config/routes.go
+# import (
+#   "github.com/sh-miyoshi/sample-project/app/controllers"
+# )
+# ...中略...
 # r.HandleFunc("/api/topics", controllers.TopicIndex).Methods("GET")
 # r.HandleFunc("/api/topics", controllers.TopicCreate).Methods("POST")
 # r.HandleFunc("/api/topics/{topic_id}", controllers.TopicShow).Methods("GET")
@@ -95,9 +99,9 @@ import (
  "net/http"
 
  "github.com/gorilla/mux"
- "github.com/sh-miyoshi/dist/app/models"
- "github.com/sh-miyoshi/dist/app/schema"
- "github.com/sh-miyoshi/dist/system"
+ "github.com/sh-miyoshi/sample-project/app/models"
+ "github.com/sh-miyoshi/sample-project/app/schema"
+ "github.com/sh-miyoshi/sample-project/system"
 )
 
 func TopicIndex(w http.ResponseWriter, r *http.Request) {
@@ -160,6 +164,9 @@ gorails generate view topics --method index
 gorails generate view topics --method show
 
 vi client/src/index.tsx
+# import TopicsIndex from './pages/topics/index';
+# import TopicsShow from './pages/topics/show/show';
+# ...中略...
 # <Route path="/topics" element={<TopicsIndex />} />
 # <Route path="/topics/:topic_id" element={<TopicsShow />} />
 ```
