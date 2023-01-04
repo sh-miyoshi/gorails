@@ -8,7 +8,7 @@ gorailsはRuby on Railsを参考にした、Go言語とReactでWebアプリケ�
 gorailsで作成するアプリケーションは基本的にRuby on Railsと同じなのですが、フロントエンドとしてReactを使うため以下のような構成になります。
 ※Go言語のtemplate packageを使うことでRailsのほぼ同じ構成をとることもできるのですが、2023年の現実問題としてフロントエンドの開発はReact一強なため、最初からこの構成にしています。
 
-TODO: 画像
+![architecture](./architecture.png)
 
 ## インストール手順
 
