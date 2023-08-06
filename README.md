@@ -26,7 +26,7 @@ gorails --help
 
 ## クイックスタート
 
-[examples/quickstart](./examples/quickstart)にサンプルWebアプリケーションの作り方をまとめたので参考にしてください。
+[examples/1_quickstart](./examples/1_quickstart.md)にサンプルWebアプリケーションの作り方をまとめたので参考にしてください。
 
 ## Notes
 

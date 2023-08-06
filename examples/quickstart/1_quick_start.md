@@ -68,7 +68,7 @@ vi config/routes.go
 # r.HandleFunc("/api/topics/{topic_id}", controllers.TopicShow).Methods("GET")
 ```
 
-サーバ特亜ラインとのやり取りはWeb APIで行うように設計しています。
+サーバ側とのやり取りはWeb APIで行うように設計しています。
 そのためそのAPIスキーマを作成します。
 
 ```bash
