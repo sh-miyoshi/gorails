@@ -14,7 +14,18 @@ WIP
 
 ## 1. Modelにリレーションをつける
 
-WIP
+メッセージを保存するためのPost modelを作成し、Topicと関連付けてやります
+関連性としては下の図のようにhas manyの関係です
+
+![image](./assets/relations.png)
+
+まずはPostモデルをコマンドで作成します
+
+```bash
+gorails generate model post --columns name:string --columns body:string --columns topic_id:string 
+```
+
+次にmodelファイルを修正して、TopicとPostを関連付けます
 
 ## 2. Controllerの作成
 
