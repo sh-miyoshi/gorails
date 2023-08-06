@@ -17,6 +17,7 @@
 ### generate
 
 (Nice to have)viewのmethodは複数設定できるようにしたい
+generate modelで複数columnsを指定じに不要な改行が入る
 
 ### server
 
