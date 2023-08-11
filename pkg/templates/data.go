@@ -13,11 +13,15 @@ services:
       POSTGRES_DB: {{.DBName}}
     ports:
       - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
   adminer:
     image: adminer
     restart: always
     ports:
       - 18080:8080
+volumes:
+  postgres:
 `
 
 var templateGitIgnore = `*.exe
