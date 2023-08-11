@@ -437,7 +437,7 @@ var templateAPISchemaYaml = `# Difines of API Schema
 #     - key: active
 #       format: boolean
 #     - key: items
-#       format: []Item
+#       format: "[]Item"
 `
 
 var templateProjectPath = `{{.ProjectPath}}`

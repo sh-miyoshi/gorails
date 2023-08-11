@@ -254,7 +254,9 @@ func convertFormat(s string, formatType int) string {
 		}
 	}
 
-	switch strings.ReplaceAll(s, "[]", "") {
+	baseStr := strings.ReplaceAll(s, "[]", "")
+
+	switch baseStr {
 	case "string":
 		return prefix + "string" + suffix
 	case "int":
@@ -274,5 +276,5 @@ func convertFormat(s string, formatType int) string {
 	}
 
 	// maybe custom format
-	return s
+	return prefix + baseStr + suffix
 }
