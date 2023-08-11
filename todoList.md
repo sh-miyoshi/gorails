@@ -19,6 +19,8 @@
 (Nice to have)viewのmethodは複数設定できるようにしたい
 generate modelで複数columnsを指定じに不要な改行が入る
 generate apiで`[]Item`はyamlパースができないので`"`で囲って文字列にする必要がある
+generate apiで配列指定の場合client側の生成がおかしくなる
+(Nice to have)--with-testオプションの追加
 
 ### server
 
