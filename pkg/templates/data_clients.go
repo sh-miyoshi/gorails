@@ -11,19 +11,21 @@ var templateClientTsConfig = `{
 `
 
 var templateClientIndex = `import React from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { createRoot } from 'react-dom/client';
 import Index from './pages';
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container!);
+
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Index />} />
       </Routes>
     </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
 `
 

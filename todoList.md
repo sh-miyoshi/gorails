@@ -6,8 +6,6 @@
   - ログイン処理する部分を書く
 - https化
   - initializerで証明書を読み込めるようにする
-- Deprication Warning
-  - Warning: ReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it's running React 17. Learn more: https://reactjs.org/link/switch-to-createroot
 - .gorails.confみたいなファイルを用意してもいいかも
   - プロジェクト独自のgorailsに関する設定をかける
   - apiのidをgo側でIDと表現するようにするなど
