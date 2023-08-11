@@ -100,3 +100,7 @@ const Index = () => {
 }
 export default Index
 `
+
+var templateClientEnv = `PORT=3000
+REACT_APP_SERVER_ADDR="http://localhost:3100"
+`

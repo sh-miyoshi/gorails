@@ -33,6 +33,7 @@ const (
 	DockerfileServer
 	DockerfileClient
 	ClientIndexPageContent
+	ClientEnv
 )
 
 func Exec(templateType int, dstFile string, data any) {
@@ -99,6 +100,8 @@ func Exec(templateType int, dstFile string, data any) {
 		fp.WriteString(templateDockerfileClient)
 	case ClientIndexPageContent:
 		fp.WriteString(templateClientIndexPageContent)
+	case ClientEnv:
+		fp.WriteString(templateClientEnv)
 	default:
 		fmt.Printf("System error: template type %d is not implemented yet\n", templateType)
 		os.Exit(1)

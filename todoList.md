@@ -22,6 +22,8 @@ generate modelで複数columnsを指定時に不要な改行が入る
 
 (Nice to have)dev用環境変数のファイルの読み込み
 
-### client
+## examples
 
-ServerAddressを環境変数などから設定できるようにする
+- quickstart
+  - clientのserver addrに環境変数を使う
+- 認証・ログイン
