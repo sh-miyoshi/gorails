@@ -12,7 +12,7 @@ import (
 
 func init() {
 	rootCmd.AddCommand(devCmd)
-	devCmd.AddCommand(devFileCopy)
+	devCmd.AddCommand(devFileCopyCmd)
 }
 
 var devCmd = &cobra.Command{
@@ -27,7 +27,7 @@ This command requires sub command
 	},
 }
 
-var devFileCopy = &cobra.Command{
+var devFileCopyCmd = &cobra.Command{
 	Use:   "file",
 	Short: "Only file copy",
 	Run: func(cmd *cobra.Command, args []string) {
