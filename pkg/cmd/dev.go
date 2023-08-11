@@ -95,6 +95,21 @@ var devFileCopyCmd = &cobra.Command{
 		templates.Exec(templates.DockerfileClient, "build/Dockerfile.client", nil)
 
 		fmt.Println("Successfully copied system files")
+
+		os.Mkdir("client", 0755)
+		os.Chdir("client")
+		os.Mkdir("src", 0755)
+		os.Mkdir("src/helpers", 0755)
+		os.Mkdir("src/pages", 0755)
+		os.Mkdir("src/types", 0755)
+		templates.Exec(templates.ClientHttpRequest, "src/helpers/http_request.ts", nil)
+		templates.Exec(templates.ClientIndex, "src/index.tsx", nil)
+		templates.Exec(templates.ClientApplicationTs, "src/types/application.ts", nil)
+		templates.Exec(templates.ClientTsConfig, "tsconfig.json", nil)
+		templates.Exec(templates.ClientIndexPageContent, "src/pages/index.tsx", nil)
+		fmt.Println("Copied client system files")
+
+		fmt.Println("Successfully copied all files")
 	},
 }
 
