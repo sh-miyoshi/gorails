@@ -13,6 +13,12 @@ import (
 func init() {
 	rootCmd.AddCommand(devCmd)
 	devCmd.AddCommand(devFileCopyCmd)
+	devCmd.AddCommand(devTargetUpdateCmd)
+
+	devTargetUpdateCmd.Flags().String("dir", "", "[Required] target directory for file")
+	devTargetUpdateCmd.MarkFlagRequired("dir")
+	devTargetUpdateCmd.Flags().String("file", "", "[Required] target file type")
+	devTargetUpdateCmd.MarkFlagRequired("file")
 }
 
 var devCmd = &cobra.Command{
@@ -89,5 +95,28 @@ var devFileCopyCmd = &cobra.Command{
 		templates.Exec(templates.DockerfileClient, "build/Dockerfile.client", nil)
 
 		fmt.Println("Successfully copied system files")
+	},
+}
+
+var devTargetUpdateCmd = &cobra.Command{
+	Use:   "target",
+	Short: "Update target file",
+	Long: `Update target file in your project
+Supported target file type:
+  - api_schema_yaml
+	- api_schema_go
+`,
+	Run: func(cmd *cobra.Command, args []string) {
+		targetDir, _ := cmd.Flags().GetString("dir")
+		targetFile, _ := cmd.Flags().GetString("file")
+		os.Chdir(targetDir)
+		switch targetFile {
+		case "api_schema_yaml":
+			templates.Exec(templates.APISchemaYaml, "config/api_schema.yaml", nil)
+		case "api_schema_go":
+			templates.Exec(templates.ServerAPISchemaGo, "app/schema/api_schema.go", nil)
+		default:
+			fmt.Printf("file type %s is not supported\n", targetFile)
+		}
 	},
 }
