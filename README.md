@@ -28,6 +28,16 @@ gorails --help
 
 [examples/1_quickstart](./examples/1_quickstart.md)にサンプルWebアプリケーションの作り方をまとめたので参考にしてください。
 
+## アプリで使える環境変数
+
+gorailsコマンドで作成したWebアプリケーションでは、デフォルトで以下の環境変数によって動作を制御できます
+
+|環境変数名|デフォルト値|説明|
+|:----|:----|:----|
+|ENV|development|環境を指定します|
+|ENABLE_SPA|false|trueの場合、clientコードをビルドした静的ファイルをサーバ側で配信します。これにより一つのサーバで起動できるようになります|
+|SERVER_ADDR|0.0.0.0:3100|サーバーのアドレスです|
+
 ## Notes
 
 gorailsではModelの実装として[GORM](https://gorm.io/ja_JP/docs/index.html)を使用しています。
